@@ -37,13 +37,65 @@ using namespace graphNode;
 
 class Solution {
     public:
-    Node* cloneGraph(Node* node) {
-        return NULL;
+    Node* cloneGraph(Node* head) {
+        if(head == NULL) {
+            return NULL;
+        }
+
+        /* 
+            create a map of all of the visited nodes in the graph
+            which corresponds each of the node values to it's pointer (Node*)
+            do this by creating a queue of nodes, pushing the head node to the queue,
+            looking at the front node of the queue, 
+            looking at all of the neighbours of this node,
+            and if the neighbor is unvisited, adding it to the map
+            then adding the neighbor to the queue
+        */
+
+        std::map<int, Node*> nodeMap;
+        std::queue<Node*> nodeQueue;
+        nodeMap[head->val] = head;
+        nodeQueue.push(head);
+        while(!nodeQueue.empty()) {
+            Node* node = nodeQueue.front();
+            nodeQueue.pop();
+            for(Node* neighbor : node->neighbors) {
+                if(nodeMap.find(neighbor->val) == nodeMap.end()) {
+                    nodeMap[neighbor->val] = neighbor;
+                    nodeQueue.push(neighbor);
+                }
+            }
+        }
+
+        /* 
+            iterate through the list of nodes, and create a copy of each of them into a clone map
+        */
+        std::map<int, Node*> cloneMap;
+        for(const std::pair<int, Node*>& nodePair : nodeMap) {
+            const int& val = nodePair.first;
+            cloneMap[val] = new Node(val);
+        }
+
+        /*
+            iterate through the list of nodes again,
+            and add the pointers of the cloned neighbor 
+            to the cloned node's neighbor list
+        */
+        for(const std::pair<int, Node*>& nodePair : nodeMap) {
+            const int& val = nodePair.first;
+            for(Node*& neighbor : nodePair.second->neighbors) {
+                int neighborVal = neighbor->val;
+                Node* neighborPtr = cloneMap[neighborVal];
+                cloneMap[val]->neighbors.push_back(neighborPtr);
+            }
+        }
+
+        /*
+            return the cloned head
+        */
+        return cloneMap[head->val];
     }
 };
-
-// returns true if the solution returns proper expected string value for a given in string
-bool runSolution(string inStr, string expStr);
 
 // returns true if the value is a digit
 bool isDigit(char c) {
@@ -215,19 +267,19 @@ Node* string2Graph(string input) {
     return head; 
 }
 
-// returns a string for a given graph
-string graph2String(Node* head) {
+// returns a map of node values to node pointers by traversing the graph
+std::map<int, Node*> getNodeMap(Node* head) {
     /*
     create a map which corresponds a val to a node ptr
     create a queue of node ptrs
     add the head to the queue
     */
 
+    std::map<int, Node*> nodeMap;
     if(head == NULL) {
-        return "[]";
+        return nodeMap;
     }
 
-    std::map<int, Node*> nodeMap;
     std::queue<Node*> nodeQueue;
     nodeQueue.push(head);
     nodeMap[head->val] = head;
@@ -241,7 +293,6 @@ string graph2String(Node* head) {
         - if neighbor not in map, add it to the queue
     */
 
-   int numNodes = 1;
    while (!nodeQueue.empty()) {
         Node* curNode = nodeQueue.front();
         nodeQueue.pop();
@@ -249,15 +300,26 @@ string graph2String(Node* head) {
             if(nodeMap.find(neighPtr->val) == nodeMap.end()) {
                 nodeMap[neighPtr->val] = neighPtr;
                 nodeQueue.push(neighPtr);
-                numNodes++;
             }
         }
    }
 
-   /*
-   for each node in the map:
-   - make a string list of the neighbors, in the form of [a,b,c,...]
-   */
+    return nodeMap;
+}
+
+// returns a string for a given graph
+string graph2String(Node* head) {
+    if(head == NULL) {
+        return "[]";
+    }
+
+    std::map<int, Node*> nodeMap = getNodeMap(head);
+    int numNodes = nodeMap.size();
+
+    /*
+        for each node in the map:
+        - make a string list of the neighbors, in the form of [a,b,c,...]
+    */
 
     std::stringstream ss;
     ss << '[';
@@ -297,14 +359,111 @@ string graph2String(Node* head) {
 
 // returns true if the two nodes are connected
 bool areConnected(Node* a, Node* b) {
-    // TODO
+    /*
+    get a map of each node value to it's pointer from graph in a
+    check if any of them match b
+    */
+    auto nodeMap = getNodeMap(a);
+    for(auto& nodePair : nodeMap) {
+        Node* node = nodePair.second;
+        if(node == b) {
+            return true;
+        }
+    }
+
     return false;
+}
+
+// returns true if the list of node neighbors are the same
+// assuming each neighbor has a unique value and the list doesn't
+// need to be sorted
+bool areSameNeighbors(std::vector<Node*> aNeighbors, std::vector<Node*> bNeighbors) {
+    /*
+        create a map af neighbors in a and b,
+        ensure that each entry in a is found in b and vice versa
+    */
+    std::map<int, Node*> aNeighMap;
+    std::map<int, Node*> bNeighMap;
+    for(Node*& aNeighbor : aNeighbors) {
+        aNeighMap[aNeighbor->val] = aNeighbor;
+    }
+
+    for(Node*& bNeighbor : bNeighbors) {
+        bNeighMap[bNeighbor->val] = bNeighbor;
+    }
+
+    for(const std::pair<int, Node*>& aNeighPair : aNeighMap) {
+        int aNeighVal = aNeighPair.first;
+        if(bNeighMap.find(aNeighVal) == bNeighMap.end()) {
+            return false;
+        }
+    }
+    
+    for(const std::pair<int, Node*>& bNeighPair : aNeighMap) {
+        int bNeighVal = bNeighPair.first;
+        if(aNeighMap.find(bNeighVal) == aNeighMap.end()) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 // returns true if all connections are the same
 bool areSame(Node* a, Node* b) {
-    // TODO
-    return false;
+    if(a == NULL) {
+        return b == NULL;
+    } else if(b == NULL) {
+        return a == NULL;
+    }
+
+    /*
+        get a map of all nodes in graph a and graph b,
+        ensure each value in a is also found in b,
+        ensure the corresponding node has neighbors also found in b,
+        then ensure each value in b is found in a,
+        then ensure the corresponding node has neighbors found in a
+    */
+   std::map<int, Node*> aNodeMap = getNodeMap(a);
+   std::map<int, Node*> bNodeMap = getNodeMap(b);
+
+    for(std::pair<int, Node*> aPair : aNodeMap) {
+        int& aVal = aPair.first;
+        Node*& aNode = aPair.second;
+        if(bNodeMap.find(aVal) == bNodeMap.end()) {
+            return false;
+        }
+        Node*& bNode = bNodeMap[aVal];
+        if(!areSameNeighbors(aNode->neighbors, bNode->neighbors)) {
+            return false;
+        }
+    }
+
+    for(std::pair<int, Node*> bPair : bNodeMap) {
+        int& bVal = bPair.first;
+        Node*& bNode = bPair.second;
+        if(aNodeMap.find(bVal) == bNodeMap.end()) {
+            return false;
+        }
+        Node*& aNode = aNodeMap[bVal];
+        if(!areSameNeighbors(bNode->neighbors, aNode->neighbors)) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+// deletes all nodes in a graph
+void deleteGraph(Node* head) {
+    if(!head) {
+        return;
+    }
+
+    std::map<int, Node*> nodeMap = getNodeMap(head);
+    for(const std::pair<int, Node*>& nodePair : nodeMap) {
+        delete nodePair.second;
+    }
 }
 
 /*
@@ -317,23 +476,59 @@ constraints:
 */
 
 // returns true if the result was the same as expected
-bool runSolution(int testNbr, string inStr, string expStr) {
-    std::cout << "running test number " << testNbr << std::endl;
-    Node* head = string2Graph(inStr);
-    std::string result = graph2String(head);
-    cout << "result: " << result << endl;
+void runSolution(int testNbr, string inStr) {
+    /*
+        create a graph from the input string,
+        use the solution function to create a copy,
+        and ensure the graphs are the same,
+        but not connected,
+        printing the result to the screen
+    */
 
-    // Solution mySolution;
-    // Node* inNode = string2Graph(inStr);
-    // Node* result = mySolution.cloneGraph(inNode);
+    cout << "===========" << endl ;
+    std::cout << "running test number " << testNbr << std::endl;
+    Node* inGraph = string2Graph(inStr);
+
+    Solution mySolution;
+    Node* clonedGraph = mySolution.cloneGraph(inGraph);
+    std::string cloneString = graph2String(clonedGraph);
+    bool sameGraph = areSame(inGraph, clonedGraph);
+    bool connectedGraph = areConnected(inGraph, clonedGraph);
+    bool fail = false;
+
+    if(!sameGraph) {
+        fail = true;
+        cout << "Error: not the same graph" << endl;
+    }
+
+    if(connectedGraph) {
+        fail = true;
+        cout << "Error: the graphs are still connected" << endl;
+    }
+
+    cout << "input string: " << inStr << endl;
+    cout << "input graph: " << graph2String(inGraph) << endl;
+    cout << "created graph: " << graph2String(clonedGraph) << endl;
+
+    if(!fail) { 
+        cout << "success" << endl;
+    }
+
+    cout << "delete graphs" << endl;
+    deleteGraph(inGraph);
+    deleteGraph(clonedGraph);
+
+    cout << "===========" << endl << endl;
 }
 
 int main() {
     try {
         int i = 1;
-        runSolution(i++, "[[2,4],[1,3],[2,4],[1,3]]", "[[2,4],[1,3],[2,4],[1,3]]");
-        runSolution(i++, "[[]]","[[]]");
-        runSolution(i++, "[]","[]");
+        runSolution(i++, "[[2,4],[1,3],[2,4],[1,3]]");
+        runSolution(i++, "[[2],[1]]");
+        runSolution(i++, "[[2],[1,3],[2]]");
+        runSolution(i++, "[[]]");
+        runSolution(i++, "[]");
         std::cout << "all done" << std::endl;
     } catch (std::exception& e) {
         std::cout << "exception: " << e.what() << std::endl;
