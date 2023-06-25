@@ -1,21 +1,81 @@
+
+how to run one script
+=====================
+- [ ] create common.h, and include it in the solution
+- [ ] get Solution.cpp to compile with generated runner
+
+- [ ] (figure out how to debug a script without proper headers)
+    - [ ] create a common.h file, with -I../../common in the makefile
+    - [ ] use directive: '#line linenum filename'
+    - [ ] write script to parse and create ifndefs in the headers
+- [ ] parse solution class
+- [ ] create input parser object from solution class
+    - note: the sample solution classes should only have one function,
+        however I shall assume the function needed to answer the question
+        is the very last one in the class, thereby allowing all extra helper
+        functions to exist before the answer
+
+I will create an enum of known input types
+and a list of acceptable types of that kind
+that way "string" and "std::string" will both be accepted
+then, this will be added to the parser
+
+- [ ] create TestCase class
+    - fill from input string
+    - fill from output string
+    - fill testcase number/name 
+    - create testcase parser for file parsing
+    - fill testcase from input and output strings
+
+- [ ] create runner.cpp generator:
+  - create #include values from input and output types
+    - vector, string, Tree, Node, ..., as needed
+  - create Solution solution;
+  - create std::vector<TestCase>;
+  - accept as a string the input values,
+    - create a map, and for each function argument:
+        - associates the arg name to the arg contents as a string
+  - convert arg content string to arg type
+  - run the solution function
+
+- [ ] create script which uses directory name,
+    and creates main.cpp, compiles solution, and runs with readme input
+
+- [ ] create directory and fill directory
+    - [ ] resolve url or problem name
+    - [ ] resolve the problem text
+    - [ ] get solution script format
+    - [ ] parse solution class function name and definitions
+    - [ ] of the argument types, generate includes
+    - [ ] generate script runner expecting a string of input values
+    - [ ] after determining argument names and types, look for them in the input string
+        - allow for optional namespace std::
+        - create dictionary of known input types
+    - [ ] after determining return type, parse 'output:' string
+        - create dictionary of known output types
+    - [ ] generate SolutionRunner.cpp (and .h files?)
+        - possibly create 'out/' directory first
+
 Tools
 =====
-- [ ] install vcpkg
-- [ ] learn cmake
 - [ ] create script to fetch problem statement
-- [ ] create simple Readme Parser
+- [X] create simple Readme Parser
 - [ ] script to create a new directory from url
 - [ ] script to fetch problem statement from url
+- [X] create common directory that compiles some extra functionality
+- [X] finish tree namespace
+- [X] finish kthsmallest tree problem
+- [X] move tree namespace to common/
 
 Cpp set
 =======
-- [ ] https://leetcode.com/problems/clone-graph/
-- [ ] Counting Bits
+- [X] Clone Graph - https://leetcode.com/problems/clone-graph/
+- [X] Counting Bits
 - [ ] Course Schedule
 - [ ] Daily Temperatures
 - [ ] Evaluate Reverse Polish Notation
 - [ ] Find Pivot Index
-- [ ] Fizz Buzz
+- [X] Fizz Buzz
 - [ ] Implement Queue using Stacks
 - [ ] Leaf-Similar Trees
 - [ ] Longest Common Subsequence
@@ -41,14 +101,15 @@ Cpp set
 - [ ] Ugly Number
 - [ ] Unique Paths
 - [ ] Valid Anagram
-- [ ] Word Break
+- [X] Word Break
 - [ ] List item
 
 Blind 75
 ========
 
 Array
-- [ ] Two Sum - https://leetcode.com/problems/two-sum/
+- [X] Two Sum - https://leetcode.com/problems/two-sum/
+    - [ ] run in cpp
 - [ ] Best Time to Buy and Sell Stock - https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
 - [ ] Contains Duplicate - https://leetcode.com/problems/contains-duplicate/
 - [ ] Product of Array Except Self - https://leetcode.com/problems/product-of-array-except-self/
@@ -79,7 +140,7 @@ Binary
 - [ ] Jump Game - https://leetcode.com/problems/jump-game/
 
 Graph
-- [ ] Clone Graph - https://leetcode.com/problems/clone-graph/
+- [X] Clone Graph - https://leetcode.com/problems/clone-graph/
 - [ ] Course Schedule - https://leetcode.com/problems/course-schedule/
 - [ ] Pacific Atlantic Water Flow - https://leetcode.com/problems/pacific-atlantic-water-flow/
 - [ ] Number of Islands - https://leetcode.com/problems/number-of-islands/
@@ -131,7 +192,7 @@ Tree
 - [ ] Subtree of Another Tree - https://leetcode.com/problems/subtree-of-another-tree/
 - [ ] Construct Binary Tree from Preorder and Inorder Traversal - https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
 - [ ] Validate Binary Search Tree - https://leetcode.com/problems/validate-binary-search-tree/
-- [ ] Kth Smallest Element in a BST - https://leetcode.com/problems/kth-smallest-element-in-a-bst/
+- [X] Kth Smallest Element in a BST - https://leetcode.com/problems/kth-smallest-element-in-a-bst/
 - [ ] Lowest Common Ancestor of BST - https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
 - [ ] Implement Trie (Prefix Tree) - https://leetcode.com/problems/implement-trie-prefix-tree/
 - [ ] Add and Search Word - https://leetcode.com/problems/add-and-search-word-data-structure-design/
@@ -143,3 +204,8 @@ Heap
 - [ ] Find Median from Data Stream - https://leetcode.com/problems/find-median-from-data-stream/
 
 Bonus - https://hackernoon.com/14-patterns-to-ace-any-coding-interview-question-c5bb3357f6ed
+
+Optional
+- [ ] create querySelector for XML
+- [ ] create LMMS xml -> sonic PI converter
+- [ ] test in-place iofstream character replacer
