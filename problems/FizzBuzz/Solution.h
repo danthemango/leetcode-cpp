@@ -48,14 +48,19 @@ Input: n = 15
 Output: ["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"]
 */
 
-std::string vector2string(std::vector<std::string> inputStringList) {
+std::string vector2string(std::vector<std::string> inputStringList)
+{
     stringstream ss;
     ss << '[';
     bool first = true;
-    for(const std::string& inputString : inputStringList) {
-        if(!first) {
+    for (const std::string &inputString : inputStringList)
+    {
+        if (!first)
+        {
             ss << ',';
-        } else {
+        }
+        else
+        {
             first = false;
         }
 
@@ -68,18 +73,18 @@ std::string vector2string(std::vector<std::string> inputStringList) {
     return result;
 }
 
-int main() {
-    Solution solution;
-    int input = 15;
-    std::string expected = "[\"1\",\"2\",\"Fizz\",\"4\",\"Buzz\",\"Fizz\",\"7\",\"8\",\"Fizz\",\"Buzz\",\"11\",\"Fizz\",\"13\",\"14\",\"FizzBuzz\"]";
-    std::vector<std::string> output = solution.fizzBuzz(input);
-    std::string outputString = vector2string(output);
-    cout << "input: " << input << endl;
-    cout << "output: " << outputString << endl;
-    cout << "expected: " << expected << endl;
-    if(expected != outputString) {
-        cout << "Fail." << endl;
-    } else {
-        cout << "Success" << endl;
-    }
-}
+// int main() {
+//     Solution solution;
+//     int input = 15;
+//     std::string expected = "[\"1\",\"2\",\"Fizz\",\"4\",\"Buzz\",\"Fizz\",\"7\",\"8\",\"Fizz\",\"Buzz\",\"11\",\"Fizz\",\"13\",\"14\",\"FizzBuzz\"]";
+//     std::vector<std::string> output = solution.fizzBuzz(input);
+//     std::string outputString = vector2string(output);
+//     cout << "input: " << input << endl;
+//     cout << "output: " << outputString << endl;
+//     cout << "expected: " << expected << endl;
+//     if(expected != outputString) {
+//         cout << "Fail." << endl;
+//     } else {
+//         cout << "Success" << endl;
+//     }
+// }

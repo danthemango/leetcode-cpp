@@ -1,231 +1,58 @@
-#include <vector>
-#include <map>
-#include <string>
-#include <sstream>
-using namespace std;
-
-#include "../../common/textParse.h"
-using namespace textParse;
+#ifndef CODEPARSE_H
+#define CODEPARSE_H
 
 /*
-    Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
-
-    You may assume that each input would have exactly one solution, and you may not use the same element twice.
-
-    You can return the answer in any order.
+    codeParse.h
+    responsible for simple C++ code parsing
 */
+#include "textParse.h"
+using namespace textParse;
 
-class Solution {
-public:
+namespace codeParse {
+
+// try to parse the name of an entity, using variable naming rules
+// updates out_name to the entity found
+// updates i to the char after a successful parse
+bool tryParseEntityName(const std::string& input, int& i, std::string& out_name) {
     /*
-        create a map of found numbers with their indices
-        iterate through each element,
-        and for each element, get the associated other number needed
-        (remainder = target - nums[i])
-        if the needed number exists in the map, return the answer:
-        - the current index, and the index of the val in the map
-        
+        variable rules:
+        - any uppercase or lowercase chars
+        - underscore '_'
+        - any digits, except in the start (0th char)
     */
-
-    // returns a vector of two ints
-    vector<int> getDoubleVector(int a, int b) {
-        std::vector<int> result;
-        result.push_back(a);
-        result.push_back(b);
-        return result;
-    }
-
-    vector<int> twoSum(vector<int>& nums, int target) {
-        vector<int> result;
-        // val -> index
-        map<int, int> foundNums;
-        
-        for(int i = 0; i < nums.size(); i++) {
-            // remainder
-            int rem = target - nums[i];
-
-            if(foundNums.find(rem) != foundNums.end()) {
-                // we found the needed number, returns its index
-                return getDoubleVector(i, foundNums[rem]);
-            }
-
-            // else insert the num into the map
-            foundNums[nums[i]] = i;
-        }
-        return result;
-    }
-};
-
-bool tryParseVectorInt(std::string input, int& i, std::vector<int>& out_list) {
     int resetI = i;
-    if(!tryParseNextChar(input, i, '[')) {
-        i = resetI;
-        return false;
-    }
-    
-    bool expectComma = false;
-
-    while(i <= input.size()) {
-        int val;
-        if(tryParseNextChar(input, i, ']')) {
-            return true;
-        } else if(expectComma) {
-            if(tryParseNextChar(input, i, ',')) {
-                expectComma = false;
+    skipSpace(input, i);
+    out_name = "";
+    // if true, we are parsing the first char in the sequence
+    bool isFirst = true;
+    while(i < input.size()) {
+        char c = input[i];
+        if(isFirst) {
+            isFirst = false;
+            if(c == '_' || std::isupper(c) || std::islower(c)) {
+                out_name.push_back(c);
             } else {
                 i = resetI;
                 return false;
             }
-        } else if(tryParseInt(input, i, val)) {
-            out_list.push_back(val);
-            expectComma = true;
         } else {
-            i = resetI;
-            return false;
-        }
-    }
-
-    i = resetI;
-    return false;
-}
-
-std::string vectorInt2String(vector<int> input) {
-    std::stringstream ss;
-    std::string result;
-    ss << '[';
-    bool first = true;
-    for(const int & val : input) {
-        if(!first) {
-            ss  << ',';
-        } else {
-            first = false;
-        }
-        ss << val;
-    }
-    ss << ']';
-    ss >> result;
-    return result;
-}
-
-// try to parse a string value in a string
-// updating i to the char after a validly parsed result
-bool tryParseString(std::string input, int& i, std::string& out_content) {
-    /*
-        after parsing a double-quote,
-        add each char to out_content assuming until a non-escaped double-quote is found
-    */
-
-    int resetI = i;
-    if(!tryParseNextChar(input, i, '"')) {
-        i = resetI;
-        return false;
-    }
-    
-    // if true, escape the next char
-    bool isEscaped = false;
-    while(i <= input.size()) {
-        int val;
-        if(isEscaped) {
-            char c = input[i];
-            i++;
-            char symbol = c;
-            // TODO add more of the escaped char symbols
-            switch(c) {
-                case 'n':
-                    symbol = '\n';
-                    break;
-                case 't':
-                    symbol = '\t';
-                    break;
-                case 'r':
-                    symbol = '\r';
-                    break;
-            }
-            out_content.push_back(symbol);
-        } else if(tryParseNextChar(input, i, '\\')) {
-            isEscaped = true;
-        } else if(tryParseNextChar(input, i, '"')) {
-            return true;
-        } else {
-            out_content.push_back(input[i]);
-            i++;
-        }
-    }
-
-    i = resetI;
-    return false;
-}
-
-// input type specifiation
-enum class ArgType {
-    _string,
-    _int,
-    _double,
-    _vectorInt,
-    _vectorString
-};
-
-// one value with any input type
-class InputValue {
-    public:
-    ArgType argType;
-
-    std::string stringVal;
-    int intVal;
-    double doubleVal;
-    std::vector<int> vectorIntVal;
-    std::vector<std::string> vectorStringVal;
-};
-
-// key-value pairs of input values
-class InputMap {
-    public:
-    std::map<std::string, InputValue> theMap;
-    void set(std::string key, InputValue val) {
-        theMap[key] = val;
-    }
-
-    bool hasKey(std::string key) {
-        return theMap.find(key) != theMap.end();
-    }
-
-    InputValue get(std::string key) {
-        return theMap[key];
-    }
-};
-
-// attempts to parse input name of the format 'name = val'
-// note: using variable naming rules, expecting a space, newline, or '=' after
-// updating i to the char after a successful parse
-bool tryParseInputName(std::string input, int& i, std::string& out_name) {
-    bool first = true;
-    int resetI = i;
-    while(i < input.size()) {
-        char c = input[i];
-        if(first) {
-            first = false;
-            if('0' <= c && c <= '9') {
-                i = resetI;
-                return false;
-            }
-        } else {
-            if(c == ' ' || c == '\t' || c == '\n' || c == '=') {
+            if(c == '_' || std::isupper(c) || std::islower(c) || std::isdigit(c)) {
+                out_name.push_back(c);
+            } else {
+                // end of symbol, since we're not at the first char we must have a valid entity name
                 return true;
             }
         }
-
-        if(c == '_' || (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
-            out_name.push_back(c);
-        } else {
-            i = resetI;
-            return false;
-        }
-
         i++;
     }
 
-    i = resetI;
-    return false;
+    // could not find any chars in entity name
+    if(isFirst) {
+        i = resetI;
+        return false;
+    } else {
+        return true;
+    }
 }
 
 // states of comment parsing
@@ -323,47 +150,18 @@ std::string stripComments(const std::string& input) {
     return result;
 }
 
-// try to parse the name of an entity, using variable naming rules
-// updates out_name to the entity found
-// updates i to the char after a successful parse
-bool tryParseEntityName(const std::string& input, int& i, std::string& out_name) {
-    /*
-        variable rules:
-        - any uppercase or lowercase chars
-        - underscore '_'
-        - any digits, except in the start (0th char)
-    */
-    int resetI = i;
-    skipSpace(input, i);
-    out_name = "";
-    // if true, we are parsing the first char in the sequence
-    bool isFirst = true;
-    while(i < input.size()) {
-        char c = input[i];
-        if(isFirst) {
-            isFirst = false;
-            if(c == '_' || std::isupper(c) || std::islower(c)) {
-                out_name.push_back(c);
-            } else {
-                i = resetI;
-                return false;
-            }
-        } else {
-            if(c == '_' || std::isupper(c) || std::islower(c) || std::isdigit(c)) {
-                out_name.push_back(c);
-            } else {
-                // end of symbol, since we're not at the first char we must have a valid entity name
-                return true;
-            }
-        }
-        i++;
-    }
 
-    // could not find any chars in entity name
-    if(isFirst) {
+// parse namespace (like std::)
+// filling the namespace string
+// updates i to the char after a successful parse
+bool tryParseNamespace(const std::string& input, int& i, std::string& out_namespace) {
+    int resetI = i;
+    std::string namespaceName;
+    if(!tryParseEntityName(input, i, namespaceName) || !tryParseNextString(input, i, "::")) {
         i = resetI;
         return false;
     } else {
+        out_namespace = namespaceName;
         return true;
     }
 }
@@ -377,21 +175,6 @@ bool tryParseKeyword(const std::string& input, int& i, std::string keyword) {
         i = resetI;
         return false;
     } else {
-        return true;
-    }
-}
-
-// parse namespace (like std::)
-// filling the namespace string
-// updates i to the char after a successful parse
-bool tryParseNamespace(const std::string& input, int& i, std::string& out_namespace) {
-    int resetI = i;
-    std::string namespaceName;
-    if(!tryParseEntityName(input, i, namespaceName) || !tryParseNextString(input, i, "::")) {
-        i = resetI;
-        return false;
-    } else {
-        out_namespace = namespaceName;
         return true;
     }
 }
@@ -421,7 +204,7 @@ class VarType {
     }
 
     // returns a stringified type
-    // if withIndirects is true, add the 'const', 'static', and reference (&) information to the string
+    // if withIndirects is true, add the 'const', 'static', and reference (&) information to the type
     std::string toString(bool withIndirects) const {
         std::string result;
         if(withIndirects) {
@@ -450,6 +233,9 @@ class VarType {
             }
             result.append(">");
         }
+        for(int i = 0; i < this->pointerLevel; i++) {
+            result.push_back('*');
+        }
         if(withIndirects && isRef) {
             result.append("&");
         }
@@ -457,7 +243,7 @@ class VarType {
     }
     
     // returns true if the type matches the type specified by a string
-    bool isEqual(std::string otherTypeString) const {
+    bool operator==(const std::string& otherTypeString) const {
         // try to parse the otherType, and cast it back to a string
         VarType otherType;
         if(!otherType.tryParse(otherTypeString)) {
@@ -466,7 +252,9 @@ class VarType {
         return this->toString(false) == otherType.toString(false);
     }
 
-    private:
+    bool operator==(const VarType& otherType) {
+        return this->toString(false) == otherType.toString(false);
+    }
 
     // fills the current object from a string
     bool tryParse(const std::string& input) {
@@ -474,20 +262,6 @@ class VarType {
         return tryParse(input, i);
     }
     
-    // try to parse static and const keywords
-    // updating i afterwards
-    bool tryParseStaticConst(const std::string& input, int& i) {
-        while(true) {
-            if(tryParseKeyword(input, i, "const")) {
-                isConst = true;
-            } else if(tryParseKeyword(input, i, "static")) {
-                isStatic = true;
-            } else {
-                break;
-            }
-        }
-    }
-
     public:
 
     // fills the current object from a string,
@@ -503,16 +277,20 @@ class VarType {
             (note that in cpp a function arg cannot be static, but lets not overcomplicate it right now)
             (note: static and const can be defined in any order before the namespaces or after the pointers)
             (note: we should be checking if const or static has been defined twice, but I don't care right now)
-            (note: a template subtype cannot be static or const, but I don't care right now)
+            (note: a template subtype cannot be both static and const, but I don't care right now)
         */
-
-        static int b = 5;
-        const static int* a = &b;
-        static std::vector<int> c;
 
         int resetI = i;
 
-        tryParseStaticConst(input, i);
+        while(true) {
+            if(tryParseKeyword(input, i, "const")) {
+                isConst = true;
+            } else if(tryParseKeyword(input, i, "static")) {
+                isStatic = true;
+            } else {
+                break;
+            }
+        }
 
         std::string namespaceName;
         while(tryParseNamespace(input, i, namespaceName)) {
@@ -555,7 +333,15 @@ class VarType {
             pointerLevel++;
         }
 
-        tryParseStaticConst(input, i);
+        while(true) {
+            if(tryParseKeyword(input, i, "const")) {
+                isConst = true;
+            } else if(tryParseKeyword(input, i, "static")) {
+                isStatic = true;
+            } else {
+                break;
+            }
+        }
 
         if(tryParseNextChar(input, i, '&')) {
             isRef = true;
@@ -564,6 +350,8 @@ class VarType {
         return true;
     }
 };
+
+
 
 // a variable definition specified by strings
 class VariableDef {
@@ -578,23 +366,33 @@ class VariableDef {
         result.append(name);
         return result;
     }
-};
 
-// try to parse a variable definition
-// updating the variable type (as a string)
-// and updating the variable name
-// and updating i to the char after a successful parse
-bool tryParseVariableDef(const std::string& input, int& i, VariableDef& out_variableDef) {
-    int resetI = i;
-    if(!out_variableDef.varType.tryParse(input, i) || !tryParseEntityName(input, i, out_variableDef.name)) {
-        i = resetI;
-        return false;        
-    } else {
+    /*
+        try to parse a variable definition
+        updating the variable type (as a string)
+        and updating the variable name
+        and updating i to the char after a successful parse
+    */
+    bool tryParse(const std::string& input, int& i) {
+        int resetI = i;
+        if(!varType.tryParse(input, i) || !tryParseEntityName(input, i, name)) {
+            i = resetI;
+            return false;
+        }
+
+        std::string stringVal;
+        int intVal;
+
         return true;
     }
-}
+};
 
-// function definition
+
+/*
+    a function starts with a type definition, a name, argument list in braces,
+    and curly braces containing a list of statements
+    we will ignore statement parsing for now and just get the function body as a string
+*/
 class FunctionDef {
     public:
     // return type
@@ -626,7 +424,7 @@ class FunctionDef {
             }
             result.append(arg.toString());
         }
-        result.append(")");
+        result.append(") ");
         if(isConst) {
             result.append(" const");
         }
@@ -678,6 +476,7 @@ class FunctionDef {
     }
 
     private:
+
     // try parsing a function argument list
     // which is a comma-separated list of variables surrounded by braces
     // updates the list of variable definitions after a parse
@@ -685,6 +484,7 @@ class FunctionDef {
     bool tryParseArgs(const std::string& input, int& i) {
         int resetI = i;
         args.clear();
+
 
         if(!tryParseNextChar(input, i, '(')) {
             i = resetI;
@@ -700,7 +500,7 @@ class FunctionDef {
             }
 
             VariableDef variableDef;
-            if(!tryParseVariableDef(input, i, variableDef)) {
+            if(!variableDef.tryParse(input, i)) {
                 break;
             } else {
                 args.push_back(variableDef);
@@ -727,11 +527,11 @@ class FunctionDef {
         body = "";
 
         /*
-            note: a scope is specified by curly braces,
-            make sure that we aren't inside of a string
-            and that curly braces inside of strings are ignored
-
-            try parsing the scope level by counting the curly braces
+            note:
+            - a scope is specified by curly braces,
+            - ensure we aren't inside of a string
+            - ensure curly braces inside of strings are ignored
+            - ensure quotation marks inside of a string escape sequence are ignored
         */
 
         if(!tryParseNextChar(input, i, '{')) {
@@ -762,17 +562,124 @@ class FunctionDef {
                 level++;
             } else if(c == '}') {
                 level--;
-                if(level == 0) {
-                    return true;
-                }
+            }
+            i++;        
+            if(level == 0) {
+                return true;
             }
             body.push_back(c);
-            i++;        
         }
         
         // we did not find the end of the current scope
         i = resetI;
         return false;
+    }
+};
+
+bool tryParseStringVal(const std::string& input, int& i, std::string& out_val) {
+    int resetI = i;
+    if(!tryParseNextChar(input, i, '"')) {
+        i = resetI;
+        return false;        
+    }
+
+    out_val = "\"";
+    while(i < input.size()) {
+        if(tryParseChar(input, i, '"')) {
+            out_val.push_back('"');
+            return true;
+        } else if(tryParseString(input, i, "\\\"")) {
+            out_val.append("\\\"");
+        } else {
+            out_val.push_back(input[i]);
+            ++i;
+        }
+    }
+    out_val = "";
+    i = resetI;
+    return false;
+}
+
+
+/* a variable assignment */
+class AssignmentDef {
+    public:
+    VariableDef variableDef;
+    std::string value;
+
+    std::string toString() const {
+        std::string result;
+        result.append(variableDef.toString());
+        if(value.size() > 0) {
+            result.append(" = ");
+            result.append(value);
+        }
+        return result;
+    }
+
+    bool tryParse(const std::string& input, int& i) {
+        int resetI = i;
+
+        if(!variableDef.tryParse(input, i)) {
+            i = resetI;
+            return false;
+        }
+
+        if(tryParseNextChar(input, i, '=')) {
+            std::string stringVal;
+            int intVal;
+            if(tryParseStringVal(input, i, stringVal)) {
+                value = stringVal;
+            } else if(tryParseNextInt(input, i, intVal)) {
+                value = std::to_string(intVal);
+            } else {
+                // throw exception?
+            }
+        }
+
+        return true;
+    }
+};
+
+/* for private/public members*/
+enum class AccessLevel {
+    _public,
+    _private
+};
+
+/*
+    member variable inside of a class
+*/
+class MemberVariable {
+    public:
+    AccessLevel isPublic = AccessLevel::_private;
+    AssignmentDef assignmentDef;
+
+    bool tryParse(const std::string& input, int& i, AccessLevel _isPublic) {
+        isPublic = _isPublic;
+        return assignmentDef.tryParse(input,i);
+    }
+
+    std::string toString() {
+        return assignmentDef.toString();
+    }
+};
+
+/*
+    member function inside of a class
+*/
+class MemberFunction {
+    public:
+    AccessLevel isPublic = AccessLevel::_private;
+    FunctionDef functionDef;
+
+    bool tryParse(const std::string& input, int& i, AccessLevel _isPublic) {
+        isPublic = _isPublic;
+        return functionDef.tryParse(input,i);
+    }
+
+    std::string toString() {
+        return functionDef.toString();
     }
 };
 
@@ -784,132 +691,142 @@ class FunctionDef {
     - a list of member variables
 */
 class ClassDef {
-    /* 
-        note, a member may be static, public, const
-    */
-   static int a;
-   const int b = 5;
-   static const int c = 6;
-   const static int d = 6;
-};
-
-/*
-    try parsing a class
-    sets the name of the class found
-    sets it's function definitions (as a string)
-    sets i to the char after a successful parse
-*/
-bool tryParseClass(std::string input, int& i, std::string& out_name, std::vector<FunctionDef>& out_functions) {
-    
-}
-
-/*
-    a function starts with a type definition, a name, argument list in braces,
-    and curly braces containing a list of statements
-    we will ignore statement parsing for now and just get the function body as a string
-*/
-
-/*
-    returns a variable type with all refs (&) removed
-*/
-std::string getTypeWithoutRefs(std::string input) {
-    int size = input.size();
-    int i = size-1;
-    while(i > 0 && (isSpace(input[i]) || input[i] == '&')) {
-        i--;
-    }
-    return input.substr(0, i+1);
-}
-
-std::string solutionString = "\
-class Solution {\n\
-public:\n\
-    /*\n\
-        create a map of found numbers with their indices\n\
-        iterate through each element,\n\
-        and for each element, get the associated other number needed\n\
-        (remainder = target - nums[i])\n\
-        if the needed number exists in the map, return the answer:\n\
-        - the current index, and the index of the val in the map\n\
-        \n\
-    */\n\
-    vector<int> twoSum(vector<int>& nums, int target) {\n\
-        vector<int> result;\n\
-        // val -> index\n\
-        map<int, int> foundNums;\n\
-        \n\
-        for(int i = 0; i < nums.size(); i++) {\n\
-            // remainder\n\
-            int rem = target - nums[i];\n\
-            if(foundNums.find(rem) != foundNums.end()) {\n\
-                // we found the needed number, returns its index\n\
-                int remIndex = foundNums[rem];\n\
-                result.push_back(i);\n\
-                result.push_back(remIndex);\n\
-                return result;\n\
-            } else {\n\
-                // else insert the num into the map\n\
-                foundNums[nums[i]] = i;\n\
-            }\n\
-        }\n\
-        return result;\n\
-    }\n\
-};\n\
-";
-
-int main() {
-    // cout << solutionString << endl;
-
-    // parse input values 
-    std::string inStringPart {"nums = [2,7,11,15], target = 9"};
-
-    // parse full input string
-    std::string fullInString {"Input: nums = [2,7,11,15], target = 9"};
-
-    // std::string funcName;
-    // ArgMap argMap;
-
-    // tryParseSolutionClass(solutionString, i, funcName, argMap);
-
-    cout << stripComments(solutionString) << endl;
-    int i = 0;
-    std::string varType;
-    std::string variableName;
-
-    FunctionDef functionDef;
-    std::string input =" std::map<int, std::string> myFunc ( const std :: string hello, std :: \t vector< std::map<int, std::string> > mystrings,int a ) const {int i = 0} ";
-
-    if(functionDef.tryParse(input, i)) {
-        cout << functionDef.toString() << endl;
-    } else {
-        cout << "could not parse" << endl;
-    }
-
-    cout << endl << "arguments:" << endl;
-    cout << "----------" << endl;
-    for(const auto& arg : functionDef.args) {
-        cout << arg.toString() << endl;
-        cout << "- ";
-        if(arg.varType.isEqual("std::string") || arg.varType.isEqual("string")) {
-            cout << "recognized string" << endl;
-        } else {
-            cout << "arg type not recognized" << endl;
-        }
-    }
+    public:
+    std::string name;
+    // a list of member functions
+    std::vector<MemberFunction> memberFunctions;
+    // a list of member variables
+    std::vector<MemberVariable> memberVariables;
 
     /*
-        Example 1:
-
-        Input: nums = [2,7,11,15], target = 9
-        Output: [0,1]
-        Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
-        Example 2:
-
-        Input: nums = [3,2,4], target = 6
-        Output: [1,2]
-        Example 3:
-
-        Input: nums = [3,3], target = 6
-        Output: [0,1]
+        try parsing a class
+        sets the name of the class found
+        sets it's function definitions (as a string)
+        sets i to the char after a successful parse
     */
+    bool tryParse(std::string input, int& i) {
+        int resetI = i;
+
+        /*
+            a class is defined with the word 'class', followed by
+            the name of a class, curly braces containing member variables and functions,
+            followed by a mandatory semicolon
+        */
+
+        if(!tryParseKeyword(input, i, "class") || !tryParseEntityName(input, i, name) || !tryParseNextChar(input, i, '{')) {
+            i = resetI;
+            return false;
+        }
+
+        memberFunctions.clear();
+        memberVariables.clear();
+
+        AccessLevel accessLevel = AccessLevel::_private;
+        // keep parsing any combination of member functions, variables, or 'public:'/'private:' keywords
+        // a class may contain 0 or more of these
+        while(true) {
+            MemberFunction memberFunction;
+            MemberVariable memberVariable;
+
+            if(memberFunction.tryParse(input, i, accessLevel)) {
+                memberFunctions.push_back(memberFunction);
+            } else if(memberVariable.tryParse(input, i, accessLevel) && tryParseNextChar(input, i, ';')) {
+                memberVariables.push_back(memberVariable);
+            } else if(tryParseNextStrings(input, i, {"public", ":"})) {
+                accessLevel = AccessLevel::_public;
+            } else if(tryParseNextStrings(input, i, {"private", ":"})) {
+                accessLevel = AccessLevel::_private;
+            } else {
+                break;
+            }
+        }
+
+        if(!tryParseNextStrings(input, i, {"}", ";"})) {
+            i = resetI;
+            return false;
+        }
+
+        return true;
+    }
+
+    // returns all member variables that are public or private
+    std::vector<MemberVariable> getMemberVarByAccess(AccessLevel accessLevel) {
+        std::vector<MemberVariable> subList;
+        for(MemberVariable item : memberVariables) {
+            if(item.isPublic == accessLevel) {
+                subList.push_back(item);
+            }
+        }
+        return subList;
+    }
+
+    std::vector<MemberFunction> getMemberFuncByAccess(AccessLevel accessLevel) {
+        std::vector<MemberFunction> subList;
+        for(MemberFunction item : memberFunctions) {
+            if(item.isPublic == accessLevel) {
+                subList.push_back(item);
+            }
+        }
+        return subList;
+    }
+    
+    // returns a string with a specific number of spaces, for indentation
+    std::string getIndent(int size) {
+        std::string result;
+        while(size > 0) {
+            result.push_back(' ');
+            size--;
+        }
+        return result;
+    }
+
+    std::string toString() {
+        std::string result;
+        result.append("class ");
+        result.append(name);
+        result.append(" {\n");
+
+
+        auto privateFunctions = getMemberFuncByAccess(AccessLevel::_private);
+        auto privateVars = getMemberVarByAccess(AccessLevel::_private);
+        if(privateFunctions.size() > 0 || privateVars.size() > 0) {
+            result.append(getIndent(4));
+            result.append("private:\n");
+        }
+        for(auto func : privateFunctions) {
+            result.append(getIndent(4));
+            result.append(func.toString());
+            result.append("\n");
+        }
+
+        for(auto var : privateVars) {
+            result.append(getIndent(4));
+            result.append(var.toString());
+            result.append(";\n");
+        }
+
+        auto publicFunctions = getMemberFuncByAccess(AccessLevel::_public);
+        auto publicVars = getMemberVarByAccess(AccessLevel::_public);
+        if(publicFunctions.size() > 0 || publicVars.size() > 0) {
+            result.append(getIndent(4));
+            result.append("public:\n");
+        }
+        for(auto func : publicFunctions) {
+            result.append(getIndent(4));
+            result.append(func.toString());
+            result.append("\n");
+        }
+
+        for(auto var : publicVars) {
+            result.append(getIndent(4));
+            result.append(var.toString());
+            result.append(";\n");
+        }
+        result.append("};\n");
+        return result;
+    }
+};
+
 }
+
+#endif // CODEPARSE_H

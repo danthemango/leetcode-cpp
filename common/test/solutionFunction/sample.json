@@ -1,0 +1,15 @@
+{
+    "name": "twoSum",
+    "args": [
+        {
+            "name": "nums",
+            "basicType": "vector<int>",
+            "testType": "TVectorInt"
+        },
+        {
+            "name": "target",
+            "basicType": "int",
+            "testType": "TInt"
+        }
+    ]
+}
