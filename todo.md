@@ -59,23 +59,23 @@ then, this will be added to the parser
 Tools
 =====
 - [ ] create script to fetch problem statement
-- [X] create simple Readme Parser
+- [x] create simple Readme Parser
 - [ ] script to create a new directory from url
 - [ ] script to fetch problem statement from url
-- [X] create common directory that compiles some extra functionality
-- [X] finish tree namespace
-- [X] finish kthsmallest tree problem
-- [X] move tree namespace to common/
+- [x] create common directory that compiles some extra functionality
+- [x] finish tree namespace
+- [x] finish kthsmallest tree problem
+- [x] move tree namespace to common/
 
 Cpp set
 =======
-- [X] Clone Graph - https://leetcode.com/problems/clone-graph/
-- [X] Counting Bits
+- [x] Clone Graph - https://leetcode.com/problems/clone-graph/
+- [x] Counting Bits
 - [ ] Course Schedule
 - [ ] Daily Temperatures
 - [ ] Evaluate Reverse Polish Notation
 - [ ] Find Pivot Index
-- [X] Fizz Buzz
+- [x] Fizz Buzz
 - [ ] Implement Queue using Stacks
 - [ ] Leaf-Similar Trees
 - [ ] Longest Common Subsequence
@@ -89,7 +89,7 @@ Cpp set
 - [ ] Minimum Falling Path Sum
 - [ ] Missing Number
 - [ ] Nearest Exit from Entrance in Maze
-- [ ] Number of 1 Bits
+- [x] Number of 1 Bits
 - [ ] Number of Steps to Reduce a Number to Zero
 - [ ] Odd Even Linked List
 - [ ] Question - Language
@@ -101,14 +101,14 @@ Cpp set
 - [ ] Ugly Number
 - [ ] Unique Paths
 - [ ] Valid Anagram
-- [X] Word Break
+- [x] Word Break
 - [ ] List item
 
 Blind 75
 ========
 
 Array
-- [X] Two Sum - https://leetcode.com/problems/two-sum/
+- [x] Two Sum - https://leetcode.com/problems/two-sum/
     - [ ] run in cpp
 - [ ] Best Time to Buy and Sell Stock - https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
 - [ ] Contains Duplicate - https://leetcode.com/problems/contains-duplicate/
@@ -140,7 +140,7 @@ Binary
 - [ ] Jump Game - https://leetcode.com/problems/jump-game/
 
 Graph
-- [X] Clone Graph - https://leetcode.com/problems/clone-graph/
+- [x] Clone Graph - https://leetcode.com/problems/clone-graph/
 - [ ] Course Schedule - https://leetcode.com/problems/course-schedule/
 - [ ] Pacific Atlantic Water Flow - https://leetcode.com/problems/pacific-atlantic-water-flow/
 - [ ] Number of Islands - https://leetcode.com/problems/number-of-islands/
@@ -192,7 +192,7 @@ Tree
 - [ ] Subtree of Another Tree - https://leetcode.com/problems/subtree-of-another-tree/
 - [ ] Construct Binary Tree from Preorder and Inorder Traversal - https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
 - [ ] Validate Binary Search Tree - https://leetcode.com/problems/validate-binary-search-tree/
-- [X] Kth Smallest Element in a BST - https://leetcode.com/problems/kth-smallest-element-in-a-bst/
+- [x] Kth Smallest Element in a BST - https://leetcode.com/problems/kth-smallest-element-in-a-bst/
 - [ ] Lowest Common Ancestor of BST - https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
 - [ ] Implement Trie (Prefix Tree) - https://leetcode.com/problems/implement-trie-prefix-tree/
 - [ ] Add and Search Word - https://leetcode.com/problems/add-and-search-word-data-structure-design/
