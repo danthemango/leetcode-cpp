@@ -99,7 +99,7 @@ Cpp set
 - [ ] Tenth Line - bash
 - [ ] Time Based Key-Value Store
 - [ ] Ugly Number
-- [ ] Unique Paths
+- [x] Unique Paths
 - [ ] Valid Anagram
 - [x] Word Break
 - [ ] List item
