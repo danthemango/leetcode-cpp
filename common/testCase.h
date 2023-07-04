@@ -10,6 +10,7 @@
     std::map<std::string,std::string> knownTypes {
         {"string", "TString"},
         {"int", "TInt"},
+        {"bool", "TBool"},
         {"vector<int>", "TVectorInt"},
         {"Node*", "TNodePtr"},
         {"vector<string>", "TVectorString"}
@@ -34,7 +35,7 @@
             return false;
         }
         if(!isKnownType(varType)) {
-            std::cerr << "Error (testCase.h): unrecognized type: " << inTypeString << endl;
+            std::cerr << "Error (testCase.h): type not yet implemented: " << inTypeString << endl;
             return false;
         }
         out_testTypeString = knownTypes[varType.toString()];
@@ -108,10 +109,26 @@ bool tryParseStringVal(const std::string& input, int& i, std::string& out_val) {
 }
 
 bool tryParseNull(const std::string& input, int& i, std::string& out_val){
+    int resetI = i;
     if(tryParseNextString(input, i, "null")) {
         out_val = "null";
         return true;
     } else {
+        i = resetI;
+        return false;
+    }
+}
+
+bool tryParseBool(const std::string& input, int& i, std::string& out_val) {
+    int resetI = i;
+    if(tryParseNextString(input, i, "true")) {
+        out_val = "true";
+        return true;
+    } else if(tryParseNextString(input, i, "false")) {
+        out_val = "false";
+        return true;
+    } else {
+        i = resetI;
         return false;
     }
 }
@@ -187,6 +204,8 @@ bool tryParseVal(const std::string& input, int& i, std::string& out_val) {
     } else if(tryParseArrVal(input, i, out_val)) {
         return true;
     } else if(tryParseNull(input, i, out_val)) {
+        return true;
+    } else if(tryParseBool(input, i, out_val)) {
         return true;
     } else {
         i = resetI;
@@ -470,7 +489,7 @@ class TVectorInt {
         val = _val;
     }
 
-    std::vector<int> get() {
+    std::vector<int>& get() {
         return val;
     }
 
@@ -508,6 +527,87 @@ class TVectorInt {
             os << num;
         }
         os << ']';
+    }
+};
+
+/* testtype boolean handler */
+class TBool {
+    public:
+    bool val;
+
+    TBool() { }
+
+    TBool(bool _val) {
+        val = _val;
+    }
+
+    bool& get() {
+        return val;
+    }
+
+    bool operator==(const bool& other) {
+        return this->val == other;
+    }
+
+    bool operator==(const TBool& other) {
+        return this->val == other.val;
+    }
+
+    bool tryParse(const std::string& input) {
+        int i = 0;
+        if(textParse::tryParseNextString(input, i, "true")) {
+            this->val = true;
+            return true;
+        } else if(textParse::tryParseNextString(input, i, "false")) {
+            this->val = false;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    friend ostream & operator<<(ostream& os, TBool& t) {
+        if(t.val == true) {
+            os << "true";
+        } else {
+            os << "false";
+        }
+        return os;
+    }
+};
+
+/* testtype string type handler */
+class TString {
+    public:
+    std::string val;
+
+    TString() { }
+
+    TString(bool _val) {
+        val = _val;
+    }
+
+    std::string& get() {
+        return val;
+    }
+
+    bool operator==(const std::string& other) {
+        return this->val == other;
+    }
+
+    bool operator==(const TString& other) {
+        return this->val == other.val;
+    }
+
+    bool tryParse(const std::string& input) {
+        int i = 0;
+        return tryParseStringVal(input, i, this->val);
+        
+    }
+
+    friend ostream & operator<<(ostream& os, TString& t) {
+        os << "\"" << t.val << "\"";
+        return os;
     }
 };
 
