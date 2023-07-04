@@ -354,7 +354,11 @@ std::shared_ptr<std::istream> getStream(const std::string& filename) {
 class TInt {
     public:
     int val;
-    int get() {
+
+    TInt() { }
+    TInt(int _val) : val(_val) { }
+
+    int& get() {
         return val;
     }
 
