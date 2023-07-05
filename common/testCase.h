@@ -13,6 +13,7 @@
         {"bool", "TBool"},
         {"vector<int>", "TVectorInt"},
         {"Node*", "TNodePtr"},
+        {"TreeNode*", "TTreeNode"},
         {"vector<string>", "TVectorString"}
     };
 
@@ -614,5 +615,38 @@ class TString {
         return os;
     }
 };
+
+/* testtype tree type handler */
+class TTreeNode {
+    public:
+    tree::TreeNode* val;
+
+    TTreeNode() { }
+
+    TTreeNode(tree::TreeNode* _val) : val(_val) { }
+
+    tree::TreeNode*& get() {
+        return val;
+    }
+
+    bool operator==(tree::TreeNode*& other) {
+        return tree::isEqual(this->val, other);
+    }
+
+    bool operator==(TTreeNode& other) {
+        return tree::isEqual(this->val, other.val);
+    }
+
+    bool tryParse(const std::string& input) {
+        int i = 0;
+        return tree::tryParseTree(input, i, this->val);
+    }
+
+    friend ostream & operator<<(ostream& os, TTreeNode& t) {
+        os << tree::tree2string(t.val) << std::endl;
+        return os;
+    }
+};
+
 
 #endif // TESTCASE_H

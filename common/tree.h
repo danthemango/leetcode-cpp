@@ -133,6 +133,13 @@ namespace tree {
         return true;
     }
 
+    // returns true if successfully parsed a tree, updating out_node with the head
+    bool tryParse(const std::string input, TreeNode*& out_node) {
+        int i = 0; 
+        return tryParseTree(input, i, out_node);
+    }
+
+
     // delete all nodes in a tree
     void deleteTree(TreeNode* head) {
         if(!head) {
@@ -200,6 +207,17 @@ namespace tree {
         std::string result;
         ss >> result;
         return result;
+    }
+
+    // returns true if a equals b
+    bool isEqual(TreeNode*& a, TreeNode*& b) {
+        if(!a || !b) {
+            return a == b;
+        } else if(a->val != b->val) {
+            return false;
+        } else {
+            return isEqual(a->left, b->left) && isEqual(a->right, b->right);
+        }
     }
 }
 
