@@ -10,6 +10,7 @@
 #include <cstdio>
 #include <memory>
 #include "TreeNode.h"
+#include "ListNode.h"
 using namespace std;
 
 #endif // COMMON_H

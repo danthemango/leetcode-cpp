@@ -6,9 +6,9 @@
 #include <queue>
 
 #include "./textParse.h"
-using namespace textParse;
 
 namespace tree {
+    using namespace textParse;
     /**
      * Definition for a binary tree node.
      */
@@ -38,7 +38,7 @@ namespace tree {
     // parses tree node value, either int or null
     // returns true if successful
     // updating i to the next char after a successful match
-    bool tryParseTreeVal(std::string input, int& i, TreeVal& out_val) {
+    bool tryParseVal(std::string input, int& i, TreeVal& out_val) {
         int resetI = i;
         skipSpace(input, i);
         if(tryParseInt(input, i, out_val.val)) {
@@ -83,7 +83,7 @@ namespace tree {
                 } else {
                     expectComma = false;
                 }
-            } else if(tryParseTreeVal(input, i, treeVal)) {
+            } else if(tryParseVal(input, i, treeVal)) {
                 out_list.push_back(treeVal);
                 expectComma = true;
             } else {
@@ -113,7 +113,7 @@ namespace tree {
         return node;
     }
 
-    bool tryParseTree(std::string input, int& i, TreeNode*& out_node) {
+    bool tryParse(std::string input, int& i, TreeNode*& out_node) {
         std::vector<TreeVal> treeValList;
         if(!tryParseValList(input, i, treeValList)) {
             out_node = NULL;
@@ -136,7 +136,7 @@ namespace tree {
     // returns true if successfully parsed a tree, updating out_node with the head
     bool tryParse(const std::string input, TreeNode*& out_node) {
         int i = 0; 
-        return tryParseTree(input, i, out_node);
+        return tryParse(input, i, out_node);
     }
 
 
@@ -155,7 +155,7 @@ namespace tree {
     TreeNode* string2tree(std::string input) {
         TreeNode* result;
         int i = 0;
-        if(tryParseTree(input, i, result)) {
+        if(tryParse(input, i, result)) {
             return result;
         } else {
             return NULL;

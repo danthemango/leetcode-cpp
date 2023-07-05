@@ -25,13 +25,13 @@ bool parseSolutionClass(const std::string& input, std::string& out_json) {
     }
 
     if(classDef.name != "Solution") {
-        std::cerr << "could not find solution" << endl;
+        std::cerr << "Error (solution2json.cpp): could not find solution" << endl;
         return false;
     }
 
     auto funcs = classDef.getMemberFuncByAccess(AccessLevel::_public);
     if(funcs.size() == 0) {
-        std::cerr << "could not find solution function" << endl;
+        std::cerr << "Error (solution2json.cpp): could not find solution function" << endl;
         return false;
     }
 

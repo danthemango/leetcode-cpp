@@ -3,7 +3,7 @@
 newProblem=$1
 
 if [ -z $newProblem ]; then
-    echo 'need new problem name'
+    echo 'usage: bash createNew <problem-name>'
     exit
 fi
 

@@ -14,7 +14,8 @@
         {"vector<int>", "TVectorInt"},
         {"Node*", "TNodePtr"},
         {"TreeNode*", "TTreeNode"},
-        {"vector<string>", "TVectorString"}
+        {"vector<string>", "TVectorString"},
+        {"ListNode*", "TListNode"}
     };
 
     /*
@@ -639,7 +640,7 @@ class TTreeNode {
 
     bool tryParse(const std::string& input) {
         int i = 0;
-        return tree::tryParseTree(input, i, this->val);
+        return tree::tryParse(input, i, this->val);
     }
 
     friend ostream & operator<<(ostream& os, TTreeNode& t) {
@@ -648,5 +649,36 @@ class TTreeNode {
     }
 };
 
+/* testtype tree type handler */
+class TListNode {
+    public:
+    linkedList::ListNode* val;
+
+    TListNode() { }
+
+    TListNode(linkedList::ListNode* _val) : val(_val) { }
+
+    linkedList::ListNode*& get() {
+        return val;
+    }
+
+    bool operator==(linkedList::ListNode*& other) {
+        return linkedList::isEqual(this->val, other);
+    }
+
+    bool operator==(TListNode& other) {
+        return linkedList::isEqual(this->val, other.val);
+    }
+
+    bool tryParse(const std::string& input) {
+        int i = 0;
+        return linkedList::tryParse(input, i, this->val);
+    }
+
+    friend ostream & operator<<(ostream& os, TListNode& t) {
+        os << linkedList::toString(t.val) << std::endl;
+        return os;
+    }
+};
 
 #endif // TESTCASE_H
