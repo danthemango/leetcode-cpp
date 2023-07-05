@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "../../common/tree.h"
+#include "../../common/TreeNode.h"
 
 using namespace std;
 using namespace tree;

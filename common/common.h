@@ -9,7 +9,7 @@
 #include <fstream>
 #include <cstdio>
 #include <memory>
-#include "tree.h"
+#include "TreeNode.h"
 using namespace std;
 
 #endif // COMMON_H
