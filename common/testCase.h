@@ -302,10 +302,10 @@ class TestCase {
 ostream& operator<<(ostream& os, TestCase& testCase) {
     os << "Test case " << testCase.num << endl;
     for(const auto& pair : testCase.input) {
-        os << "<- " << pair.first << ": " << pair.second << endl;
-    }
+            os << "<- " << pair.first << ": " << pair.second << endl;
+        }
     os << "-> " << testCase.expected << endl;
-}
+    }
 
 // creates a list of testcases from input
 std::vector<std::shared_ptr<TestCase>> getTestCases(std::shared_ptr<std::istream> in) {
@@ -396,6 +396,10 @@ class TVectorString {
             }
         }
         return true;
+    }
+
+    std::vector<std::string>& get() {
+        return this->val;
     }
 
     // returns true if there was a quote-delimited string value in input at pos i
