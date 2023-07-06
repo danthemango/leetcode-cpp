@@ -2,6 +2,7 @@
 using namespace std;
 
 namespace XMLParse {
+    using namespace textParse;
 
     /* returns a string with the indentation level expected */
     std::string getLevelIndent(int level) {

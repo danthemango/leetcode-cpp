@@ -1,10 +1,10 @@
 CC=g++ -g
 
-main.exe: main.cpp
-	${CC} main.cpp -o main.exe
+xmlParser.exe: xmlParser.cpp
+	${CC} xmlParser.cpp -o xmlParser.exe
 
 clean:
-	rm -rf main.exe obj
+	rm -rf xmlParser.exe obj
 
-run: main.exe
-	./main.exe
+run: xmlParser.exe
+	./xmlParser.exe
