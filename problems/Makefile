@@ -3,7 +3,7 @@ CC=g++ -g
 COMMON_PATH=../common
 TOOL_PATH=../tools
 
-# recompile problems if there were changes in tool or common files
+# trigger common objects and tools on if they've been updated
 COMMONSRCS=$(wildcard $(COMMON_PATH)/*.h)
 TOOLSRCS=$(wildcard $(TOOL_PATH)/*/*.cpp)
 
@@ -15,6 +15,8 @@ RUNNER_EXES=$(foreach fd, $(SUBDIRS), $(fd)/runner.exe)
 RUNNER_CPPS=$(foreach fd, $(SUBDIRS), $(fd)/runner.cpp)
 SOLUTION_FUNCS=$(foreach fd, $(SUBDIRS), $(fd)/SolutionFunc.json)
 ALL_RUN = $(addsuffix .run, $(SUBDIRS))
+# also add a makefile to each to make testing a bit easier
+MAKEFILES=$(foreach fd, $(SUBDIRS), $(fd)/Makefile)
 
 ALL_CLEAN = $(addsuffix .clean, $(SUBDIRS))
 
@@ -50,7 +52,10 @@ $(TOOL_PATH)/solution2json/solution2json.exe : %.exe : %.cpp
 $(COMMONSRCS):
 	make -C $(COMMON_PATH)
 
+$(MAKEFILES):
+	bash createSubMake.sh $(dir $@)
+
 clean: $(ALL_CLEAN)
-	rm -rf $(RUNNER_EXES) $(RUNNER_CPPS) $(SOLUTION_FUNCS)
+	rm -rf $(RUNNER_EXES) $(RUNNER_CPPS) $(SOLUTION_FUNCS) $(MAKEFILES)
 
 .PHONY: tools problems common clean $(ALL_RUN) $(ALL_CLEAN)

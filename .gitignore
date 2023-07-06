@@ -1,6 +1,7 @@
 runner.cpp
 SolutionFunc.json
 .vscode
+problems/*/Makefile
 
 # Prerequisites
 *.d
