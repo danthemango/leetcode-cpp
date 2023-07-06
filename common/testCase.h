@@ -65,8 +65,9 @@ bool tryParseExample(const std::string& input, int& out_int) {
     }
 }
 
+// TODO: isdigit should only be used after the first char
 bool isInputKeySymbol(const char& c) {
-    return std::isupper(c) || std::islower(c) || c == '_';
+    return std::isupper(c) || std::islower(c) || c == '_' || std::isdigit(c);
 }
 
 bool tryParseInputKey(const std::string& input, int& i, std::string& out_key) {
@@ -297,16 +298,19 @@ class TestCase {
     std::map<std::string, std::string> input;
     std::string expected;
 
-    friend ostream & operator<<(ostream& os, TestCase& t);
-};
+    // returns true if input parameter was set
+    bool hasInput(std::string key) {
+        return input.find(key) != input.end();
+    }
 
-ostream& operator<<(ostream& os, TestCase& testCase) {
-    os << "Test case " << testCase.num << endl;
-    for(const auto& pair : testCase.input) {
+    friend ostream & operator<<(ostream& os, TestCase& t) {
+        os << "Test case " << t.num << endl;
+        for(const auto& pair : t.input) {
             os << "<- " << pair.first << ": " << pair.second << endl;
         }
-    os << "-> " << testCase.expected << endl;
+        os << "-> " << t.expected << endl;
     }
+};
 
 // creates a list of testcases from input
 std::vector<std::shared_ptr<TestCase>> getTestCases(std::shared_ptr<std::istream> in) {

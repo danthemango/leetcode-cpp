@@ -51,15 +51,21 @@ int main(int argc, char** argv) {
         << "#include \"../../common/testCase.h\"\n"
         << "#include \"Solution.h\"\n"
         << '\n'
-        << "void runSolution(std::shared_ptr<TestCase> testCase) {\n";
+        << "bool runSolution(std::shared_ptr<TestCase> testCase) {\n"
+        << "    std::cout << *testCase;\n";
 
         // print input types
         for(const auto& arg : solutionFunction->args) {
             outfile
                 << "    " << arg->testType << " " << arg->name << ";\n"
+                << "    if(!testCase->hasInput(\"" << arg->name << "\")) {\n"
+                << "        std::cerr << \"Error (runner.cpp): Could not find input value '" << arg->name << "' in readme\" << std::endl;\n"
+                << "        return false;\n"
+                << "    }\n"
+
                 << "    if(!" << arg->name << ".tryParse(testCase->input[\"" << arg->name << "\"])) {\n"
-                << "        std::cout << \"could not parse input value '" << arg->name << "' from input file\" << std::endl;\n"
-                << "        return;\n"
+                << "        std::cerr << \"Error (runner.cpp): Could not parse input value '" << arg->name << "' in readme\" << std::endl;\n"
+                << "        return false;\n"
                 << "    }\n";
         }
 
@@ -67,15 +73,14 @@ int main(int argc, char** argv) {
         outfile
             << "    " << solutionFunction->testType << " expected;\n"
             << "    if(!expected.tryParse(testCase->expected)) {\n"
-            << "        std::cout << \"Could not parse expected value: \" << \"(\" << testCase->expected << \")\" << std::endl;\n"
-            << "        return;\n"
+            << "        std::cerr << \"Error (runner.cpp): Could not parse expected value: \" << \"(\" << testCase->expected << \") in readme\" << std::endl;\n"
+            << "        return false;\n"
             << "    }\n"
             << "\n"
             << "    Solution solution;\n"
             << "    " << solutionFunction->testType << " output(solution." << solutionFunction->name << "(" << argsRunString(solutionFunction->args) << "));\n";
 
         outfile
-            << "    std::cout << *testCase;\n"
             << "    std::cout << \"output: \" << output << std::endl;\n"
             << '\n'
             << "    if(expected == output) {\n"
@@ -84,6 +89,7 @@ int main(int argc, char** argv) {
             << "        std::cout << \"Fail.\" << std::endl;\n"
             << "    }\n"
             << "    std::cout << std::endl;\n"
+            << "    return true;\n"
             << "}\n"
             << '\n'
             << "int main(int argc, char** argv) {\n"
@@ -91,14 +97,18 @@ int main(int argc, char** argv) {
             << "        auto in = getStream(\"readme.md\");\n"
             << "        auto testCases = getTestCases(in);\n"
             << "        for(const auto& testCase : testCases) {\n"
-            << "            runSolution(testCase);\n"
+            << "            if(!runSolution(testCase)) {\n"
+            << "                return 1;\n"
+            << "            }\n"
             << "        }\n"
             << "    } catch (std::exception& e) {\n"
             << "        std::cout << \"exception: \" << e.what() << std::endl;\n"
             << "    } catch (const char* s) {\n"
             << "        std::cout << \"exception: \" << s << std::endl;\n"
             << "    }\n"
+            << "    return 0;\n"
             << "}\n";
+
 
         infile.close();
         outfile.close();
