@@ -13,28 +13,37 @@ using namespace linkedList;
  */
 class Solution {
 public:
+    void addTo(ListNode*& head, ListNode*& other) {
+        other->next = head;
+        head = head->next;
+    }
+
     ListNode* oddEvenList(ListNode* head) {
         if(!head || !head->next) {
             return head;
         }
-        int count = 1;
+
+        int isOdd = true;
         ListNode* oddHead = head;
         ListNode* oddEnd = head;
         ListNode* evenHead = head->next;
         ListNode* evenEnd = head->next;
-        while(head->next) {
-            cout << head->val << count << endl;
-            if(count % 2 == 1) {
-                oddEnd->next = head->next;
-                oddEnd = oddEnd->next;
+        head = head->next->next;
+        while(head) {
+            if(isOdd) {
+                oddEnd->next = head;
+                oddEnd = head;
             } else {
-                evenEnd->next = head->next;
-                evenEnd = evenEnd->next;
+                evenEnd->next = head;
+                evenEnd = head;
             }
-            ++count;
             head = head->next;
+            isOdd = !isOdd;
         }
+
         oddEnd->next = evenHead;
+        evenEnd->next = nullptr;
+
         return oddHead;
     }
 };
