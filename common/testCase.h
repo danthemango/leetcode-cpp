@@ -315,13 +315,14 @@ class TestCase {
 // creates a list of testcases from input
 std::vector<std::shared_ptr<TestCase>> getTestCases(std::shared_ptr<std::istream> in) {
     std::vector<std::shared_ptr<TestCase>> result;
-    std::shared_ptr<TestCase> testCase;
+    auto testCase = std::make_shared<TestCase>();
     std::string line;
 
     while (std::getline(*in, line)) {
         int num;
+
         if(tryParseExample(line, num)) {
-            testCase = std::shared_ptr<TestCase> (new TestCase());
+            testCase = std::make_shared<TestCase>();
             testCase->num = num;
             result.push_back(testCase);
         }
