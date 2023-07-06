@@ -1,3 +1,4 @@
+
 CC=g++ -g
 
 EXE=solution2json

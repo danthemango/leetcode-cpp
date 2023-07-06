@@ -18,18 +18,33 @@ using namespace std;
 bool parseSolutionClass(const std::string& input, std::string& out_json) {
     int i = 0;
     std::string inputSC = stripComments(input);
-    ClassDef classDef;
+    auto classDef = std::make_shared<ClassDef>();
 
-    while(i < inputSC.size() && !classDef.tryParse(inputSC, i) && classDef.name != "Solution") {
-        ++i;
+    // create a list of classes, and fetch class Solution after
+    std::vector<std::shared_ptr<ClassDef>> classDefs;
+
+    while(i < inputSC.size()) {
+        if(classDef->tryParse(inputSC, i)) {
+            classDefs.push_back(classDef);
+            classDef = std::make_shared<ClassDef>();
+        } else {
+            ++i;
+        }
     }
 
-    if(classDef.name != "Solution") {
+    bool found = false;
+    for(const auto& def : classDefs) {
+        if(def->name == "Solution") {
+            classDef = def;
+            found = true;
+        }
+    }
+    if(!found) {
         std::cerr << "Error (solution2json.cpp): could not find solution" << endl;
         return false;
     }
 
-    auto funcs = classDef.getMemberFuncByAccess(AccessLevel::_public);
+    auto funcs = classDef->getMemberFuncByAccess(AccessLevel::_public);
     if(funcs.size() == 0) {
         std::cerr << "Error (solution2json.cpp): could not find solution function" << endl;
         return false;
