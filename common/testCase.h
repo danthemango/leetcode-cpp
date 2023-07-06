@@ -15,7 +15,8 @@
         {"Node*", "TNodePtr"},
         {"TreeNode*", "TTreeNode"},
         {"vector<string>", "TVectorString"},
-        {"ListNode*", "TListNode"}
+        {"ListNode*", "TListNode"},
+        {"uint32_t", "TInt"} // <- not sure about this one
     };
 
     /*
