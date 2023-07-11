@@ -1,7 +1,7 @@
 #include "../../common/common.h"
 
 // note sure about this one, but it wasn't defined for my compiler
-#define uint32_t int
+#define uint32_t unsigned int
 
 class Solution {
 public:

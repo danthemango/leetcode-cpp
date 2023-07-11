@@ -67,20 +67,22 @@ public:
 
             if(p2 == s.size()-1) {
                 result = wordMap.hasWord(sStart);
-            } else if(!wordMap.hasWord(sStart)) {
-                result = wordBreak(s, p1, p2+1);
-            } else {
+            } else if(wordMap.hasWord(sStart)) {
                 result = wordBreak(s, p2+1, p2+1) || wordBreak(s, p1, p2+1);
+            } else {
+                result = wordBreak(s, p1, p2+1);
             }
         }
+
         resultsMemo.saveMemo(p1, p2, result);
         return result;
     }
 
     bool wordBreak(string s, vector<string>& wordDict) {
-        for(string& word : wordDict) {
+        for(const string& word : wordDict) {
             wordMap.add(word);
         }
+
         return wordBreak(s, 0, 0);
     }
 };

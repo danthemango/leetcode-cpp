@@ -22,3 +22,5 @@ echo "run: runner.exe" >> $SUBMAKE
 printf "\tmake -C .. \$(BASENAME).run\n" >> $SUBMAKE
 echo "runner.exe:" >> $SUBMAKE
 printf "\tmake -C .. \$(BASENAME)/runner.exe\n" >> $SUBMAKE
+echo "clean:" >> $SUBMAKE
+printf "\trm -f runner.exe runner.cpp SolutionFunc.json\n" >> $SUBMAKE

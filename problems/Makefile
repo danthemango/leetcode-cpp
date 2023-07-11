@@ -4,12 +4,16 @@ COMMON_PATH=../common
 TOOL_PATH=../tools
 
 # trigger common objects and tools on if they've been updated
-COMMONSRCS=$(wildcard $(COMMON_PATH)/*.h)
+COMMON_OBJS=$(wildcard $(COMMON_PATH)/obj/*.o)
+COMMON_SRCS=$(wildcard $(COMMON_PATH)/*.cpp $(COMMON_PATH)/*.h)
 TOOLSRCS=$(wildcard $(TOOL_PATH)/*/*.cpp)
+HDR_PATH=$(COMMON_PATH)
+OBJ_PATH=$(COMMON_PATH)/obj
 
 # in each directory, compile as:
 # Solution.h -> SolutionFunc.json -> runner.cpp -> (runner.exe <- readme.md) -> run
-SUBDIRS=$(shell find . -maxdepth 1 -type d | sed -r '/^\.$$/d' )
+# (and ignore directories starting with '_')
+SUBDIRS=$(shell find . -maxdepth 1 -type d | sed -r '/^\.$$/d' | sed -r '/^\.\/_/d' )
 SOLUTIONS=$(foreach fd, $(SUBDIRS), $(fd)/Solution.h)
 RUNNER_EXES=$(foreach fd, $(SUBDIRS), $(fd)/runner.exe)
 RUNNER_CPPS=$(foreach fd, $(SUBDIRS), $(fd)/runner.cpp)
@@ -20,18 +24,19 @@ MAKEFILES=$(foreach fd, $(SUBDIRS), $(fd)/Makefile)
 
 ALL_CLEAN = $(addsuffix .clean, $(SUBDIRS))
 
-all: $(COMMONSRCS) $(RUNNER_EXES)
+all: $(RUNNER_EXES) $(MAKEFILES)
 
 # all -> subdir.run
 run: all $(ALL_RUN)
 
 # subdir.run -> subdir/runner.exe
 $(ALL_RUN): %.run : %/runner.exe %/readme.md
+	@echo $@
 	cd $(basename $@) && ./runner.exe -i readme.md
 
 # subdir/runner.exe -> subdir/runner.cpp
-$(RUNNER_EXES) : %.exe : %.cpp $(COMMONSRCS)
-	$(CC) $< -o $@
+$(RUNNER_EXES) : %.exe : %.cpp $(COMMON_OBJS) $(COMMON_OBJS)
+	$(CC) $(COMMON_DIR) $(OBJ_PATH)/*.o $< -o $@
 
 # subdir/runner.cpp -> Solution.h
 $(RUNNER_CPPS) : %runner.cpp : %SolutionFunc.json $(TOOL_PATH)/json2runner/json2runner.exe
@@ -48,14 +53,15 @@ $(TOOL_PATH)/json2runner/json2runner.exe : %.exe : %.cpp
 $(TOOL_PATH)/solution2json/solution2json.exe : %.exe : %.cpp
 	make -C $(TOOL_PATH)/solution2json
 
-# rebuild common files if necessary
-$(COMMONSRCS):
-	make -C $(COMMON_PATH)
+makefiles: $(MAKEFILES)
 
 $(MAKEFILES):
 	bash createSubMake.sh $(dir $@)
 
+common:
+	make -C $(COMMON_PATH)
+
 clean: $(ALL_CLEAN)
 	rm -rf $(RUNNER_EXES) $(RUNNER_CPPS) $(SOLUTION_FUNCS) $(MAKEFILES)
 
-.PHONY: tools problems common clean $(ALL_RUN) $(ALL_CLEAN)
+.PHONY: tools problems common clean makefiles $(ALL_RUN) $(ALL_CLEAN)

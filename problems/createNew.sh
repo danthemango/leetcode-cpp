@@ -11,3 +11,4 @@ mkdir $newProblem
 touch $newProblem/Solution.h
 echo '#include "../../common/common.h"' >> $newProblem/Solution.h
 touch $newProblem/readme.md
+bash createSubMake.sh $newProblem
