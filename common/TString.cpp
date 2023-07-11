@@ -22,7 +22,11 @@ bool TString:: operator==(const TString& other) {
 
 bool TString::tryParse(const std::string& input) {
     int i = 0;
-    return codeParse::tryParseStringVal(input, i, this->val);
+    if(!codeParse::tryParseStringVal(input, i, this->val)) {
+        return false;
+    }
+    this->val = this->val.substr(1, this->val.size()-2);
+    return true;
 }
 
 std::ostream & operator<<(std::ostream& os, TString& t) {

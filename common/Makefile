@@ -1,4 +1,4 @@
-CC=g++ -g
+CC=g++ -g -Wall
 CPPS=$(wildcard *.cpp)
 OBJS=$(patsubst %.cpp,obj/%.o,$(CPPS))
 
