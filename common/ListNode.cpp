@@ -88,9 +88,4 @@ namespace linkedList {
 
         return a == b;
     }
-
-
-
-
-
 }

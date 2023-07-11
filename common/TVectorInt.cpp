@@ -46,4 +46,5 @@ std::ostream& operator<<(std::ostream& os, TVectorInt& t) {
         os << num;
     }
     os << ']';
+    return os;
 }

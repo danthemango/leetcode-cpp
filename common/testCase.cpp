@@ -11,7 +11,8 @@ std::map<std::string,std::string> knownTypes {
     {"TreeNode*", "TTreeNode"},
     {"vector<string>", "TVectorString"},
     {"ListNode*", "TListNode"},
-    {"uint32_t", "TInt"} // <- not sure about this one
+    {"uint32_t", "TInt"}, // <- not sure about this one
+    {"vector<vector<int>>", "TVVInt"}
 };
 
 /*
@@ -29,11 +30,11 @@ bool isKnownType(const codeParse::VarType& varType) {
 bool tryParseTestType(const std::string& inTypeString, std::string& out_testTypeString) {
     codeParse::VarType varType;
     if(!varType.tryParse(inTypeString)) {
-        std::cerr << "Error (testCase.h): could not parse type: " << inTypeString << endl;
+        std::cerr << "Error (testCase.cpp): could not parse type: " << inTypeString << endl;
         return false;
     }
     if(!isKnownType(varType)) {
-        std::cerr << "Error (testCase.h): type not yet implemented: " << inTypeString << endl;
+        std::cerr << "Error (testCase.cpp): type not yet implemented: " << inTypeString << endl;
         return false;
     }
     out_testTypeString = knownTypes[varType.toString()];
