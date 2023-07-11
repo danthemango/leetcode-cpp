@@ -1,3 +1,4 @@
+#pragma once
 #ifndef COMMON_H
 #define COMMON_H
 
@@ -11,6 +12,15 @@
 #include <memory>
 #include "TreeNode.h"
 #include "ListNode.h"
+// wrapper types for testcase parsing
+#include "TVectorString.h"
+// #include "TVector.h"
+#include "TVectorInt.h"
+#include "TBool.h"
+#include "TString.h"
+#include "TTreeNode.h"
+#include "TListNode.h"
 using namespace std;
 
 #endif // COMMON_H
+

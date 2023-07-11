@@ -1,6 +1,7 @@
 runner.cpp
 SolutionFunc.json
 .vscode
+*.swp
 problems/*/Makefile
 
 # Prerequisites
