@@ -4,12 +4,18 @@
 SUBDIRS=$(shell find . -maxdepth 1 -type d | sed -r '/^\.$$/d' )
 SRCS=$(wildcard *.cpp $(foreach fd, $(SUBDIRS), $(fd)/*.cpp))
 EXE=$(patsubst %.cpp,%.exe,$(SRC))
+COMMON_PATH=../common
+COMMONSRCS=$(wildcard $(COMMON_PATH)/*.h)
 
 SRC = $(wildcard */*.cpp)
 
 all: $(EXE)
 
-$(EXE): %.exe : %.cpp
+# rebuild common files if necessary
+$(COMMONSRCS):
+	make -C $(COMMON_PATH)
+
+$(EXE): %.exe : %.cpp $(COMMONSRCS)
 	$(MAKE) -C $(dir $@)
 
 # run 'make -C subdir clean' for each subdir

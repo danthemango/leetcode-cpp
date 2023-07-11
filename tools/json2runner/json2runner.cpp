@@ -43,15 +43,21 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    std::string fileContents = file2String(infile);
+    std::string fileContents = textParse::file2String(infile);
     auto fileJSON = js::JObject::tryParse(fileContents);
     auto solutionFunction = SolutionFunction::tryParse(fileJSON);
 
     outfile << "#include \"../../common/common.h\"\n"
         << "#include \"../../common/testCase.h\"\n"
         << "#include \"Solution.h\"\n"
-        << '\n'
-        << "bool runSolution(std::shared_ptr<TestCase> testCase) {\n"
+        << "\n\n"
+        << "enum Status {\n"
+        << "    error,\n"
+        << "    success,\n"
+        << "    fail\n"
+        << "};"
+        << "\n\n"
+        << "Status runSolution(std::shared_ptr<TestCase> testCase) {\n"
         << "    std::cout << *testCase;\n";
 
         // print input types
@@ -60,12 +66,12 @@ int main(int argc, char** argv) {
                 << "    " << arg->testType << " " << arg->name << ";\n"
                 << "    if(!testCase->hasInput(\"" << arg->name << "\")) {\n"
                 << "        std::cerr << \"Error (runner.cpp): Could not find input value '" << arg->name << "' in readme\" << std::endl;\n"
-                << "        return false;\n"
+                << "        return error;\n"
                 << "    }\n"
 
                 << "    if(!" << arg->name << ".tryParse(testCase->input[\"" << arg->name << "\"])) {\n"
                 << "        std::cerr << \"Error (runner.cpp): Could not parse input value '" << arg->name << "' in readme\" << std::endl;\n"
-                << "        return false;\n"
+                << "        return error;\n"
                 << "    }\n";
         }
 
@@ -74,7 +80,7 @@ int main(int argc, char** argv) {
             << "    " << solutionFunction->testType << " expected;\n"
             << "    if(!expected.tryParse(testCase->expected)) {\n"
             << "        std::cerr << \"Error (runner.cpp): Could not parse expected value: \" << \"(\" << testCase->expected << \") in readme\" << std::endl;\n"
-            << "        return false;\n"
+            << "        return error;\n"
             << "    }\n"
             << "\n"
             << "    Solution solution;\n"
@@ -84,23 +90,30 @@ int main(int argc, char** argv) {
             << "    std::cout << \"output: \" << output << std::endl;\n"
             << '\n'
             << "    if(expected == output) {\n"
-            << "        std::cout << \"Success.\" << std::endl;\n"
+            << "        std::cout << \"Success.\" << std::endl << std::endl;\n"
+            << "        return success;\n"
             << "    } else {\n"
-            << "        std::cout << \"Fail.\" << std::endl;\n"
+            << "        std::cout << \"Fail.\" << std::endl << std::endl;\n"
+            << "        return fail;\n"
             << "    }\n"
-            << "    std::cout << std::endl;\n"
-            << "    return true;\n"
             << "}\n"
             << '\n'
             << "int main(int argc, char** argv) {\n"
             << "    try {\n"
             << "        auto in = getStream(\"readme.md\");\n"
             << "        auto testCases = getTestCases(in);\n"
+            << "        int count = 0;\n"
+            << "        int total = 0;\n"
             << "        for(const auto& testCase : testCases) {\n"
-            << "            if(!runSolution(testCase)) {\n"
+            << "            Status status = runSolution(testCase);\n"
+            << "            if(status == error) {\n"
             << "                return 1;\n"
+            << "            } else if(status == success) {\n"
+            << "                ++count;\n"
             << "            }\n"
+            << "            ++total;\n"
             << "        }\n"
+            << "        std::cout << \"(\" << count << \"/\" << total << \")\" << std::endl;\n"
             << "    } catch (std::exception& e) {\n"
             << "        std::cout << \"exception: \" << e.what() << std::endl;\n"
             << "    } catch (const char* s) {\n"

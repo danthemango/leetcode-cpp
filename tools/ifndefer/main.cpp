@@ -9,7 +9,7 @@
 */
 
 #include <cstdio>
-#include "../../common/common.h"
+#include "common.h"
 using namespace std;
 using namespace textParse;
 
@@ -19,7 +19,7 @@ using namespace textParse;
     underscores or dots for now
 */
 bool isFileChar(const char & c) {
-    return isChar(c) || c == '_' || c == '.' || std::isdigit(c);
+    return std::isalnum(c) || c == '_' || c == '.';
 }
 
 /*

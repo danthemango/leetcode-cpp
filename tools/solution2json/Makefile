@@ -1,11 +1,13 @@
 
 CC=g++ -g
+COMMON_DIR=../../common
+OBJ_DIR=../../common/obj
 
 EXE=solution2json
 DEPS=../../common/*.h ../../tools/*/*.cpp
 
 $(EXE).exe: $(EXE).cpp $(DEPS)
-	${CC} $(EXE).cpp -o $(EXE).exe
+	$(CC) -I$(COMMON_DIR) $(OBJ_DIR)/*.o $< -o $@
 
 clean:
 	rm -rf $(EXE).exe obj
