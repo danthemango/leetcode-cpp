@@ -12,7 +12,7 @@ class TVectorString {
     // returns true if there was a quote-delimited string value in input at pos i
     // updating i to the char after a successful parse
     // updating out_val with the string contents
-    bool tryParseStringValue(const std::string& input, int& i, std::string& out_val);
+    bool tryParseStringValue(const std::string& input, unsigned int& i, std::string& out_val);
 
     bool tryParse(const std::string& input);
 

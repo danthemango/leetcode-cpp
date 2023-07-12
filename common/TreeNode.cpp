@@ -24,8 +24,8 @@ namespace tree {
     // parses tree node value, either int or null
     // returns true if successful
     // updating i to the next char after a successful match
-    bool tryParseVal(std::string input, int& i, TreeVal& out_val) {
-        int resetI = i;
+    bool tryParseVal(std::string input, unsigned int& i, TreeVal& out_val) {
+        unsigned int resetI = i;
         skipSpace(input, i);
         if(tryParseInt(input, i, out_val.val)) {
             out_val.isNull = false;
@@ -43,7 +43,7 @@ namespace tree {
     // with a format similar to: [54,3,null,4]
     // returns true if successful
     // and updating i to the position after a successful match
-    bool tryParseValList(std::string input, int& i, std::vector<TreeVal>& out_list) {
+    bool tryParseValList(std::string input, unsigned int& i, std::vector<TreeVal>& out_list) {
         int resetI = i;
         if(!tryParseNextChar(input, i, '[')) {
             i = resetI;
@@ -99,7 +99,7 @@ namespace tree {
         return node;
     }
 
-    bool tryParse(std::string input, int& i, TreeNode*& out_node) {
+    bool tryParse(std::string input, unsigned int& i, TreeNode*& out_node) {
         std::vector<TreeVal> treeValList;
         if(!tryParseValList(input, i, treeValList)) {
             out_node = NULL;
@@ -121,7 +121,7 @@ namespace tree {
 
     // returns true if successfully parsed a tree, updating out_node with the head
     bool tryParse(const std::string input, TreeNode*& out_node) {
-        int i = 0; 
+        unsigned int i = 0; 
         return tryParse(input, i, out_node);
     }
 
@@ -140,7 +140,7 @@ namespace tree {
 
     TreeNode* string2tree(std::string input) {
         TreeNode* result;
-        int i = 0;
+        unsigned int i = 0;
         if(tryParse(input, i, result)) {
             return result;
         } else {

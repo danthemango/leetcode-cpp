@@ -16,13 +16,13 @@ bool TVVInt::operator==(const std::vector<std::vector<int>>& other) {
     if(this->val.size() != other.size()) {
         return false;
     }
-    for(int i = 0; i < this->val.size(); i++) {
+    for(unsigned int i = 0; i < this->val.size(); i++) {
         const auto& mySubArr = this->val[i];
         const auto& otherSubArr = other[i];
         if(mySubArr.size() != otherSubArr.size()) {
             return false;
         }
-        for(int j = 0; j < mySubArr.size(); j++) {
+        for(unsigned int j = 0; j < mySubArr.size(); j++) {
             const auto& myVal = mySubArr[j];
             const auto& otherVal = otherSubArr[j];
             if(myVal != otherVal) {
@@ -38,7 +38,7 @@ bool TVVInt::operator==(const TVVInt &other) {
 }
 
 bool TVVInt::tryParse(const std::string &input) {
-    int i = 0;
+    unsigned int i = 0;
 
     if(!textParse::tryParseNextChar(input, i, '[')) {
         return false;

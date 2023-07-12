@@ -21,7 +21,7 @@ bool TString:: operator==(const TString& other) {
 }
 
 bool TString::tryParse(const std::string& input) {
-    int i = 0;
+    unsigned int i = 0;
     if(!codeParse::tryParseStringVal(input, i, this->val)) {
         return false;
     }

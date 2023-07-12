@@ -25,7 +25,7 @@ Node* TNodePtr::get() {
 }
 
 bool TNodePtr::tryParse(const std::string& input) {
-    int i = 0;
+    unsigned int i = 0;
     std::vector<std::vector<int>> nodeEdgeLists;
     if(!tryGetEdges(input, i, nodeEdgeLists)) {
         val = nullptr;
@@ -49,7 +49,7 @@ bool TNodePtr::operator==(const TNodePtr& other) {
 // returns true if an edge of format "[a,b,c,...]" can be found in string
 // at position i
 // and increments i to the char after the pattern
-bool TNodePtr::tryGetEdge(std::string input, int& i, std::vector<int>& edge) {
+bool TNodePtr::tryGetEdge(std::string input, unsigned int& i, std::vector<int>& edge) {
     int resetI = i;
     if(!textParse::tryParseNextChar(input, i, '[')) {
         i = resetI;
@@ -74,7 +74,7 @@ bool TNodePtr::tryGetEdge(std::string input, int& i, std::vector<int>& edge) {
 // returns true if an array of edges with format [[a,b],[c,d]] are found
 // with 0 or more edges
 // and increments i to the char after the pattern
-bool TNodePtr::tryGetEdges(std::string input, int& i, std::vector<std::vector<int>>& out_edges) {
+bool TNodePtr::tryGetEdges(std::string input, unsigned int& i, std::vector<std::vector<int>>& out_edges) {
     if(!textParse::tryParseNextChar(input, i, '[')) {
         return false;
     }
@@ -100,7 +100,7 @@ bool TNodePtr::tryGetEdges(std::string input, int& i, std::vector<std::vector<in
 // returns true if an array of edges with format [[a,b],[c,d,...],...] are found
 // with 0 or more nodes and 0 or more edges
 bool TNodePtr::tryGetEdges(std::string input, std::vector<std::vector<int>>& out_edges) {
-    int i = 0;
+    unsigned int i = 0;
     return tryGetEdges(input, i, out_edges);
 }
 
@@ -131,7 +131,7 @@ Node* TNodePtr::vector2graph(std::vector<std::vector<int>> nodeEdgeLists) {
     //         - look up corresponding ptr from the map
     //         - add the ptr as a neighbor to the current node ptr
 
-    for(int i = 0; i < nodeEdgeLists.size(); i++) {
+    for(unsigned int i = 0; i < nodeEdgeLists.size(); i++) {
         int curVal = i+1;
         const std::vector<int>& nodeEdges = nodeEdgeLists[i];
         for(const int& neighVal: nodeEdges) {

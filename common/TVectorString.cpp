@@ -12,7 +12,7 @@ bool TVectorString::operator==(TVectorString& other) {
         return false;
     }
 
-    for(int i = 0; i < val.size(); i++) {
+    for(unsigned int i = 0; i < val.size(); i++) {
         if(val[i] != other.val[i]) {
             return false;
         }
@@ -27,7 +27,7 @@ std::vector<std::string>& TVectorString::get() {
 // returns true if there was a quote-delimited string value in input at pos i
 // updating i to the char after a successful parse
 // updating out_val with the string contents
-bool TVectorString::tryParseStringValue(const std::string& input, int& i, std::string& out_val) {
+bool TVectorString::tryParseStringValue(const std::string& input, unsigned int& i, std::string& out_val) {
     bool inString = false;
 
     std::string result;
@@ -60,11 +60,11 @@ bool TVectorString::tryParseStringValue(const std::string& input, int& i, std::s
 }
 
 bool TVectorString::tryParse(const std::string& input) {
-    int i = 0;
+    unsigned int i = 0;
     if(!textParse::tryParseNextChar(input, i, '[')) {
         return false;
     }
-    bool inString = false;
+    // bool inString = false;
     bool isFirst = true;
 
     while(i < input.size()) {

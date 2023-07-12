@@ -37,12 +37,12 @@ class TNodePtr {
     // returns true if an edge of format "[a,b,c,...]" can be found in string
     // at position i
     // and increments i to the char after the pattern
-    bool tryGetEdge(std::string input, int& i, std::vector<int>& edge);
+    bool tryGetEdge(std::string input, unsigned int& i, std::vector<int>& edge);
 
     // returns true if an array of edges with format [[a,b],[c,d]] are found
     // with 0 or more edges
     // and increments i to the char after the pattern
-    bool tryGetEdges(std::string input, int& i, std::vector<std::vector<int>>& out_edges);
+    bool tryGetEdges(std::string input, unsigned int& i, std::vector<std::vector<int>>& out_edges);
 
     // returns true if an array of edges with format [[a,b],[c,d,...],...] are found
     // with 0 or more nodes and 0 or more edges

@@ -18,38 +18,38 @@ namespace textParse {
 
     // returns true if c is the char in input at i
     // incrementing i if found
-    bool tryParseChar(const std::string& input, int& i, const char& c);
+    bool tryParseChar(const std::string& input, unsigned int& i, const char& c);
 
     // increments i until a non-whitespace is found
-    bool skipSpace(std::string input, int& i);
+    bool skipSpace(std::string input, unsigned int& i);
 
     // returns true if 'c' is the next non-whitespace character in input,
     // after position i
     // updating i if found
-    bool tryParseNextChar(const std::string& input, int& i, char c);
+    bool tryParseNextChar(const std::string& input, unsigned int& i, char c);
 
     // returns true if we found string 'str' at index i of input
     // updating i to the next index after the last char in input found
-    bool tryParseString(const std::string& input, int& i, const std::string& str);
+    bool tryParseString(const std::string& input, unsigned int& i, const std::string& str);
 
     // try parsing a string skipping any spaces
     // setting i to the next char after successful parse
-    bool tryParseNextString(const std::string& input, int& i, const std::string& str);
+    bool tryParseNextString(const std::string& input, unsigned int& i, const std::string& str);
 
     // try parsing a sequence of strings ignoring whitespace
     // setting i to the next char after successful parse
-    bool tryParseNextStrings(const std::string& input, int& i, const std::vector<std::string>& strList);
+    bool tryParseNextStrings(const std::string& input, unsigned int& i, const std::vector<std::string>& strList);
 
     // returns true if an int can be found at position i of input string
     // and returns the value in out_int
     // and increments i to the char after the pattern
-    bool tryParseInt(const std::string& input, int& i, int& out_int);
+    bool tryParseInt(const std::string& input, unsigned int& i, int& out_int);
 
     bool tryParseInt(const std::string& input, int& out_int);
 
-    bool tryParseNextInt(const std::string& input, int& i, int& out_int);
+    bool tryParseNextInt(const std::string& input, unsigned int& i, int& out_int);
 
-    bool tryParseVectorInt(const std::string& input, int& i, std::vector<int>& out_vector);
+    bool tryParseVectorInt(const std::string& input, unsigned int& i, std::vector<int>& out_vector);
 
     bool tryParseVectorInt(const std::string& input, std::vector<int>& out_vector);
 

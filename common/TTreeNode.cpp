@@ -18,7 +18,7 @@ bool TTreeNode::operator==(TTreeNode& other) {
 }
 
 bool TTreeNode::tryParse(const std::string& input) {
-    int i = 0;
+    unsigned int i = 0;
     return tree::tryParse(input, i, this->val);
 }
 

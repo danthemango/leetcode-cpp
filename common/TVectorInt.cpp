@@ -16,7 +16,7 @@ bool TVectorInt::operator==(const std::vector<int>& other) {
     if(val.size() != other.size()) {
         return false;
     }
-    int i = 0;
+    unsigned int i = 0;
     while(i < val.size() && i < other.size()) {
         if(val[i] != other[i]) {
             return false;

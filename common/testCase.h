@@ -27,35 +27,35 @@ bool tryParseExample(const std::string& input, int& out_int);
 // TODO: isdigit should only be used after the first char
 bool isInputKeySymbol(const char& c);
 
-bool tryParseInputKey(const std::string& input, int& i, std::string& out_key);
+bool tryParseInputKey(const std::string& input, unsigned int& i, std::string& out_key);
 
-bool tryParseStringVal(const std::string& input, int& i, std::string& out_val);
+bool tryParseStringVal(const std::string& input, unsigned int& i, std::string& out_val);
 
-bool tryParseNull(const std::string& input, int& i, std::string& out_val);
+bool tryParseNull(const std::string& input, unsigned int& i, std::string& out_val);
 
-bool tryParseBool(const std::string& input, int& i, std::string& out_val);
+bool tryParseBool(const std::string& input, unsigned int& i, std::string& out_val);
 
-bool tryParseIntVal(const std::string& input, int& i, std::string& out_val);
+bool tryParseIntVal(const std::string& input, unsigned int& i, std::string& out_val);
 
 /*
     returns true if we have an array of values
 */
-bool tryParseArrVal(const std::string& input, int& i, std::string& out_val);
+bool tryParseArrVal(const std::string& input, unsigned int& i, std::string& out_val);
 
-bool tryParseVal(const std::string& input, int& i, std::string& out_val);
+bool tryParseVal(const std::string& input, unsigned int& i, std::string& out_val);
 
 /**
  * returns true if we could fetch one key-value pair from input
 */
-bool tryParseInputKeyVal(const std::string& input, int& i, std::string& out_key, std::string& out_val);
+bool tryParseInputKeyVal(const std::string& input, unsigned int& i, std::string& out_key, std::string& out_val);
 
 // returns true if the string starts with 'Input:'
 // updating i to the end of the pattern
-bool tryParseInputLine(const std::string& input, int& i, std::map<std::string, std::string>& valMap);
+bool tryParseInputLine(const std::string& input, unsigned int& i, std::map<std::string, std::string>& valMap);
 
 bool tryParseInputLine(const std::string& input, std::map<std::string, std::string>& valMap);
 
-bool tryParseOutputLine(const std::string& input, int& i, std::string& out_val);
+bool tryParseOutputLine(const std::string& input, unsigned int& i, std::string& out_val);
 
 bool tryParseOutputLine(const std::string& input, std::string& out_val);
 

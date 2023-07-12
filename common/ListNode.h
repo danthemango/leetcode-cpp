@@ -9,18 +9,20 @@
 
 namespace linkedList {
     using namespace textParse;
-    struct ListNode
+    class ListNode
     {
+        public:
         int val;
         ListNode *next;
         ListNode();
         ListNode(int x);
         ListNode(int x, ListNode *next);
+        friend std::ostream& operator<<(std::ostream& os, ListNode& l);
     };
 
     // returns true if a listnode could be created
     // this will assume a list is specified with an array of integers of the format, like: [5,1,5,6,8]
-    bool tryParse(const std::string& input, int& i, ListNode*& out_listNode);
+    bool tryParse(const std::string& input, unsigned int& i, ListNode*& out_listNode);
 
     // deletes the linked listnodes
     void deleteList(ListNode* head);

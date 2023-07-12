@@ -19,7 +19,7 @@ bool TListNode::operator==(TListNode& other) {
 }
 
 bool TListNode::tryParse(const std::string& input) {
-    int i = 0;
+    unsigned int i = 0;
     return linkedList::tryParse(input, i, this->val);
 }
 

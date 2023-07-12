@@ -47,7 +47,7 @@ bool tryParseTestType(const std::string& inTypeString, std::string& out_testType
     and returns true
 */
 bool tryParseExample(const std::string& input, int& out_int) {
-    int i = 0;
+    unsigned int i = 0;
     if(!tryParseNextString(input, i, "Example") || !tryParseInt(input, i, out_int) || !tryParseNextChar(input, i, ':')) {
         return false;
     }
@@ -58,8 +58,8 @@ bool isInputKeySymbol(const char& c) {
     return std::isupper(c) || std::islower(c) || c == '_' || std::isdigit(c);
 }
 
-bool tryParseInputKey(const std::string& input, int& i, std::string& out_key) {
-    int resetI = i;
+bool tryParseInputKey(const std::string& input, unsigned int& i, std::string& out_key) {
+    unsigned int resetI = i;
     skipSpace(input, i);
     std::string key;
     while(i < input.size() && isInputKeySymbol(input[i])) {
@@ -76,8 +76,8 @@ bool tryParseInputKey(const std::string& input, int& i, std::string& out_key) {
     }
 }
 
-bool tryParseStringVal(const std::string& input, int& i, std::string& out_val) {
-    int resetI = i;
+bool tryParseStringVal(const std::string& input, unsigned int& i, std::string& out_val) {
+    unsigned int resetI = i;
     if(!tryParseNextChar(input, i, '"')) {
         i = resetI;
         return false;        
@@ -100,7 +100,7 @@ bool tryParseStringVal(const std::string& input, int& i, std::string& out_val) {
     return false;
 }
 
-bool tryParseNull(const std::string& input, int& i, std::string& out_val){
+bool tryParseNull(const std::string& input, unsigned int& i, std::string& out_val){
     int resetI = i;
     if(tryParseNextString(input, i, "null")) {
         out_val = "null";
@@ -111,8 +111,8 @@ bool tryParseNull(const std::string& input, int& i, std::string& out_val){
     }
 }
 
-bool tryParseBool(const std::string& input, int& i, std::string& out_val) {
-    int resetI = i;
+bool tryParseBool(const std::string& input, unsigned int& i, std::string& out_val) {
+    unsigned int resetI = i;
     if(tryParseNextString(input, i, "true")) {
         out_val = "true";
         return true;
@@ -125,9 +125,9 @@ bool tryParseBool(const std::string& input, int& i, std::string& out_val) {
     }
 }
 
-bool tryParseIntVal(const std::string& input, int& i, std::string& out_val) {
+bool tryParseIntVal(const std::string& input, unsigned int& i, std::string& out_val) {
     int num;
-    int resetI = i;
+    unsigned int resetI = i;
     if(!tryParseInt(input, i, num)) {
         i = resetI;
         return false;
@@ -139,9 +139,9 @@ bool tryParseIntVal(const std::string& input, int& i, std::string& out_val) {
 /*
     returns true if we have an array of values
 */
-bool tryParseArrVal(const std::string& input, int& i, std::string& out_val) {
+bool tryParseArrVal(const std::string& input, unsigned int& i, std::string& out_val) {
 
-    int resetI = i;
+    unsigned int resetI = i;
     if(!tryParseNextChar(input, i, '[')) {
         i = resetI;
         return false;
@@ -186,7 +186,7 @@ bool tryParseArrVal(const std::string& input, int& i, std::string& out_val) {
     }
 }
 
-bool tryParseVal(const std::string& input, int& i, std::string& out_val) {
+bool tryParseVal(const std::string& input, unsigned int& i, std::string& out_val) {
     int resetI = i;
 
     if(tryParseStringVal(input, i, out_val)) {
@@ -208,8 +208,8 @@ bool tryParseVal(const std::string& input, int& i, std::string& out_val) {
 /**
  * returns true if we could fetch one key-value pair from input
 */
-bool tryParseInputKeyVal(const std::string& input, int& i, std::string& out_key, std::string& out_val) {
-    int resetI = i;
+bool tryParseInputKeyVal(const std::string& input, unsigned int& i, std::string& out_key, std::string& out_val) {
+    unsigned int resetI = i;
     if(!tryParseInputKey(input, i, out_key) || !tryParseNextChar(input, i, '=')) {
         i = resetI;
         return false;
@@ -225,9 +225,9 @@ bool tryParseInputKeyVal(const std::string& input, int& i, std::string& out_key,
 
 // returns true if the string starts with 'Input:'
 // updating i to the end of the pattern
-bool tryParseInputLine(const std::string& input, int& i, std::map<std::string, std::string>& valMap) {
+bool tryParseInputLine(const std::string& input, unsigned int& i, std::map<std::string, std::string>& valMap) {
 
-    int resetI = i;
+    unsigned int resetI = i;
     if(!tryParseNextString(input, i, "Input: ")) {
         i = resetI;
         return false;
@@ -256,12 +256,12 @@ bool tryParseInputLine(const std::string& input, int& i, std::map<std::string, s
 }
 
 bool tryParseInputLine(const std::string& input, std::map<std::string, std::string>& valMap) {
-    int i = 0;
+    unsigned int i = 0;
     return tryParseInputLine(input, i, valMap);
 }
 
-bool tryParseOutputLine(const std::string& input, int& i, std::string& out_val) {
-    int resetI = i;
+bool tryParseOutputLine(const std::string& input, unsigned int& i, std::string& out_val) {
+    unsigned int resetI = i;
     if(!tryParseNextString(input, i, "Output: ")) {
         i = resetI;
         return false;
@@ -276,7 +276,7 @@ bool tryParseOutputLine(const std::string& input, int& i, std::string& out_val) 
 }
 
 bool tryParseOutputLine(const std::string& input, std::string& out_val) {
-    int i = 0;
+    unsigned int i = 0;
     return tryParseOutputLine(input, i, out_val);
 }
 

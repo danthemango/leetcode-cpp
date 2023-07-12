@@ -9,14 +9,14 @@ namespace codeParse {
     // try to parse the name of an entity, using variable naming rules
     // updates out_name to the entity found
     // updates i to the char after a successful parse
-    bool tryParseEntityName(const std::string& input, int& i, std::string& out_name) {
+    bool tryParseEntityName(const std::string& input, unsigned int& i, std::string& out_name) {
         /*
             variable rules:
             - any uppercase or lowercase chars
             - underscore '_'
             - any digits, except in the start (0th char)
         */
-        int resetI = i;
+        unsigned int resetI = i;
         textParse::skipSpace(input, i);
         out_name = "";
         // if true, we are parsing the first char in the sequence
@@ -80,7 +80,7 @@ namespace codeParse {
             if we are inside of a string and see a non-escaped quote, exit string
         */
 
-        int i = 0;
+        unsigned int i = 0;
         // if true, we are inside of a comment
         CommentState commentState = CommentState::none;
         while(i < input.size()) {
@@ -149,8 +149,8 @@ namespace codeParse {
     // parse namespace (like std::)
     // filling the namespace string
     // updates i to the char after a successful parse
-    bool tryParseNamespace(const std::string& input, int& i, std::string& out_namespace) {
-        int resetI = i;
+    bool tryParseNamespace(const std::string& input, unsigned int& i, std::string& out_namespace) {
+        unsigned int resetI = i;
         std::string namespaceName;
         if(!tryParseEntityName(input, i, namespaceName) || !tryParseNextString(input, i, "::")) {
             i = resetI;
@@ -163,8 +163,8 @@ namespace codeParse {
 
     // tries to parse a known keyword
     // updates i to the char after a successful parse
-    bool tryParseKeyword(const std::string& input, int& i, std::string keyword) {
-        int resetI = i;
+    bool tryParseKeyword(const std::string& input, unsigned int& i, std::string keyword) {
+        unsigned int resetI = i;
         std::string entityName;
         if(!tryParseEntityName(input, i, entityName) || entityName != keyword) {
             i = resetI;
@@ -234,13 +234,13 @@ namespace codeParse {
 
     // fills the current object from a string
     bool VarType::tryParse(const std::string& input) {
-        int i = 0;
+        unsigned int i = 0;
         return tryParse(input, i);
     }
     
     // fills the current object from a string,
     // updating i to the next char position after a successful parse
-    bool VarType::tryParse(const std::string & input, int& i) {
+    bool VarType::tryParse(const std::string & input, unsigned int& i) {
         /*
             a type is a list of 0 or more namespace (n1::n2:: ...)
             followed by a simple entity name (variable naming rules)
@@ -254,7 +254,7 @@ namespace codeParse {
             (note: a template subtype cannot be both static and const, but I don't care right now)
         */
 
-        int resetI = i;
+        unsigned int resetI = i;
 
         while(true) {
             if(tryParseKeyword(input, i, "const")) {
@@ -338,15 +338,15 @@ namespace codeParse {
         and updating the variable name
         and updating i to the char after a successful parse
     */
-    bool VariableDef::tryParse(const std::string& input, int& i) {
-        int resetI = i;
+    bool VariableDef::tryParse(const std::string& input, unsigned int& i) {
+        unsigned int resetI = i;
         if(!varType.tryParse(input, i) || !tryParseEntityName(input, i, name)) {
             i = resetI;
             return false;
         }
 
         std::string stringVal;
-        int intVal;
+        // int intVal;
 
         return true;
     }
@@ -383,7 +383,7 @@ namespace codeParse {
 
     // parse function definition from input string, starting at position i
     // updates i to the char after a successful parse
-    bool FunctionDef::tryParse(const std::string input, int& i) {
+    bool FunctionDef::tryParse(const std::string input, unsigned int& i) {
         /*
             updates the name of the function
             updates the list of variable definitions after a parse
@@ -393,7 +393,7 @@ namespace codeParse {
             (note: the keyword "const" after a member function definition means
             it cannot alter member variables)
         */
-        int resetI = i;
+        unsigned int resetI = i;
 
         // optional
         if(tryParseKeyword(input, i, "static")) {
@@ -422,8 +422,8 @@ namespace codeParse {
     // which is a comma-separated list of variables surrounded by braces
     // updates the list of variable definitions after a parse
     // and updates i to the char after a successful parse
-    bool FunctionDef::tryParseArgs(const std::string& input, int& i) {
-        int resetI = i;
+    bool FunctionDef::tryParseArgs(const std::string& input, unsigned int& i) {
+        unsigned int resetI = i;
         args.clear();
 
         if(!tryParseNextChar(input, i, '(')) {
@@ -460,8 +460,8 @@ namespace codeParse {
     // returning true if successfully parsed
     // updating the scope contents as a string
     // updating i to the char after the successful parse
-    bool FunctionDef::tryParseScope(const std::string& input, int& i) {
-        int resetI = i;
+    bool FunctionDef::tryParseScope(const std::string& input, unsigned int& i) {
+        unsigned int resetI = i;
         body = "";
 
         /*
@@ -513,8 +513,8 @@ namespace codeParse {
         return false;
     }
 
-    bool tryParseStringVal(const std::string& input, int& i, std::string& out_val) {
-        int resetI = i;
+    bool tryParseStringVal(const std::string& input, unsigned int& i, std::string& out_val) {
+        unsigned int resetI = i;
         if(!tryParseNextChar(input, i, '"')) {
             i = resetI;
             return false;        
@@ -547,8 +547,8 @@ namespace codeParse {
         return result;
     }
 
-    bool AssignmentDef::tryParse(const std::string& input, int& i) {
-        int resetI = i;
+    bool AssignmentDef::tryParse(const std::string& input, unsigned int& i) {
+        unsigned int resetI = i;
 
         if(!variableDef.tryParse(input, i)) {
             i = resetI;
@@ -570,7 +570,7 @@ namespace codeParse {
         return true;
     }
 
-    bool MemberVariable::tryParse(const std::string& input, int& i, AccessLevel _isPublic) {
+    bool MemberVariable::tryParse(const std::string& input, unsigned int& i, AccessLevel _isPublic) {
         isPublic = _isPublic;
         return assignmentDef.tryParse(input,i);
     }
@@ -579,7 +579,7 @@ namespace codeParse {
         return assignmentDef.toString();
     }
 
-    bool MemberFunction::tryParse(const std::string& input, int& i, AccessLevel _isPublic) {
+    bool MemberFunction::tryParse(const std::string& input, unsigned int& i, AccessLevel _isPublic) {
         isPublic = _isPublic;
         return functionDef.tryParse(input,i);
     }
@@ -594,8 +594,8 @@ namespace codeParse {
         sets it's function definitions (as a string)
         sets i to the char after a successful parse
     */
-    bool ClassDef::tryParse(std::string input, int& i) {
-        int resetI = i;
+    bool ClassDef::tryParse(std::string input, unsigned int& i) {
+        unsigned int resetI = i;
 
         /*
             a class is defined with the word 'class', followed by

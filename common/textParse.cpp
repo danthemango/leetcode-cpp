@@ -16,7 +16,7 @@ namespace textParse {
                 break;
         }
     }
-    bool tryParseChar(const std::string& input, int& i, const char& c) {
+    bool tryParseChar(const std::string& input, unsigned int& i, const char& c) {
         if(i < input.size() && input[i] == c) {
             i++;
             return true;
@@ -24,7 +24,7 @@ namespace textParse {
             return false;
         }
     }
-    bool skipSpace(std::string input, int& i) {
+    bool skipSpace(std::string input, unsigned int& i) {
         bool skipped = false;
         while(i < input.size() && isSpace(input[i])) {
             skipped = true;
@@ -32,13 +32,13 @@ namespace textParse {
         }
         return skipped;
     }
-    bool tryParseNextChar(const std::string& input, int& i, char c) {
+    bool tryParseNextChar(const std::string& input, unsigned int& i, char c) {
         skipSpace(input, i);
         return tryParseChar(input, i, c);
     }
-    bool tryParseString(const std::string& input, int& i, const std::string& str) {
-        int resetI = i;
-        for(int j = 0; j < str.size(); j++) {
+    bool tryParseString(const std::string& input, unsigned int& i, const std::string& str) {
+        unsigned int resetI = i;
+        for(unsigned int j = 0; j < str.size(); j++) {
             if(!tryParseChar(input, i, str[j])) {
                 i = resetI;
                 return false;
@@ -47,8 +47,8 @@ namespace textParse {
 
         return true;
     }
-    bool tryParseNextString(const std::string& input, int& i, const std::string& str) {
-        int resetI = i;
+    bool tryParseNextString(const std::string& input, unsigned int& i, const std::string& str) {
+        unsigned int resetI = i;
         skipSpace(input, i);
         if(tryParseString(input, i, str)) {
             return true;
@@ -57,8 +57,8 @@ namespace textParse {
             return false;
         }
     }
-    bool tryParseNextStrings(const std::string& input, int& i, const std::vector<std::string>& strList) {
-        int resetI = i;
+    bool tryParseNextStrings(const std::string& input, unsigned int& i, const std::vector<std::string>& strList) {
+        unsigned int resetI = i;
         for(const std::string& str : strList) {
             if(!tryParseNextString(input, i, str)) {
                 i = resetI;
@@ -67,8 +67,8 @@ namespace textParse {
         }
         return true;
     }
-    bool tryParseInt(const std::string& input, int& i, int& out_int) {
-        int resetI = i;
+    bool tryParseInt(const std::string& input, unsigned int& i, int& out_int) {
+        unsigned int resetI = i;
 
         if(i >= input.size()) {
             i = resetI;
@@ -97,15 +97,15 @@ namespace textParse {
         return true;
     }
     bool tryParseInt(const std::string& input, int& out_int) {
-        int i = 0;
+        unsigned int i = 0;
         return tryParseInt(input, i, out_int);
     }
-    bool tryParseNextInt(const std::string& input, int& i, int& out_int) {
+    bool tryParseNextInt(const std::string& input, unsigned int& i, int& out_int) {
         skipSpace(input, i);
-        tryParseInt(input, i, out_int);
+        return tryParseInt(input, i, out_int);
     }
-    bool tryParseVectorInt(const std::string& input, int& i, std::vector<int>& out_vector) {
-        int resetI = i;
+    bool tryParseVectorInt(const std::string& input, unsigned int& i, std::vector<int>& out_vector) {
+        unsigned int resetI = i;
         std::vector<int> result;
         if(!tryParseNextChar(input, i, '[')) {
             i = resetI;
@@ -145,7 +145,7 @@ namespace textParse {
         return false;
     }
     bool tryParseVectorInt(const std::string& input, std::vector<int>& out_vector) {
-        int i = 0;
+        unsigned int i = 0;
         return tryParseVectorInt(input, i, out_vector);
     }
     std::string stdin2String() {

@@ -11,7 +11,7 @@ namespace codeParse {
     // try to parse the name of an entity, using variable naming rules
     // updates out_name to the entity found
     // updates i to the char after a successful parse
-    bool tryParseEntityName(const std::string& input, int& i, std::string& out_name);
+    bool tryParseEntityName(const std::string& input, unsigned int& i, std::string& out_name);
 
     // returns a string of the input cpp code that has comments removed
     std::string stripComments(const std::string& input);
@@ -19,11 +19,11 @@ namespace codeParse {
     // parse namespace (like std::)
     // filling the namespace string
     // updates i to the char after a successful parse
-    bool tryParseNamespace(const std::string& input, int& i, std::string& out_namespace);
+    bool tryParseNamespace(const std::string& input, unsigned int& i, std::string& out_namespace);
 
     // tries to parse a known keyword
     // updates i to the char after a successful parse
-    bool tryParseKeyword(const std::string& input, int& i, std::string keyword);
+    bool tryParseKeyword(const std::string& input, unsigned int& i, std::string keyword);
 
     /*
         internal definition of a variable type
@@ -61,7 +61,7 @@ namespace codeParse {
         
         // fills the current object from a string,
         // updating i to the next char position after a successful parse
-        bool tryParse(const std::string & input, int& i);
+        bool tryParse(const std::string & input, unsigned int& i);
     };
 
     // a variable definition specified by strings
@@ -78,7 +78,7 @@ namespace codeParse {
             and updating the variable name
             and updating i to the char after a successful parse
         */
-        bool tryParse(const std::string& input, int& i);
+        bool tryParse(const std::string& input, unsigned int& i);
     };
 
     /*
@@ -105,7 +105,7 @@ namespace codeParse {
 
         // parse function definition from input string, starting at position i
         // updates i to the char after a successful parse
-        bool tryParse(const std::string input, int& i);
+        bool tryParse(const std::string input, unsigned int& i);
 
         private:
 
@@ -113,7 +113,7 @@ namespace codeParse {
         // which is a comma-separated list of variables surrounded by braces
         // updates the list of variable definitions after a parse
         // and updates i to the char after a successful parse
-        bool tryParseArgs(const std::string& input, int& i);
+        bool tryParseArgs(const std::string& input, unsigned int& i);
 
         private:
 
@@ -121,10 +121,10 @@ namespace codeParse {
         // returning true if successfully parsed
         // updating the scope contents as a string
         // updating i to the char after the successful parse
-        bool tryParseScope(const std::string& input, int& i);
+        bool tryParseScope(const std::string& input, unsigned int& i);
     };
 
-    bool tryParseStringVal(const std::string& input, int& i, std::string& out_val);
+    bool tryParseStringVal(const std::string& input, unsigned int& i, std::string& out_val);
 
     /* a variable assignment */
     class AssignmentDef {
@@ -134,7 +134,7 @@ namespace codeParse {
 
         std::string toString() const;
 
-        bool tryParse(const std::string& input, int& i);
+        bool tryParse(const std::string& input, unsigned int& i);
     };
 
     /* for private/public members*/
@@ -151,7 +151,7 @@ namespace codeParse {
         AccessLevel isPublic = AccessLevel::_private;
         AssignmentDef assignmentDef;
 
-        bool tryParse(const std::string& input, int& i, AccessLevel _isPublic);
+        bool tryParse(const std::string& input, unsigned int& i, AccessLevel _isPublic);
 
         std::string toString();
     };
@@ -164,7 +164,7 @@ namespace codeParse {
         AccessLevel isPublic = AccessLevel::_private;
         FunctionDef functionDef;
 
-        bool tryParse(const std::string& input, int& i, AccessLevel _isPublic);
+        bool tryParse(const std::string& input, unsigned int& i, AccessLevel _isPublic);
 
         std::string toString();
     };
@@ -190,7 +190,7 @@ namespace codeParse {
             sets it's function definitions (as a string)
             sets i to the char after a successful parse
         */
-        bool tryParse(std::string input, int& i);
+        bool tryParse(std::string input, unsigned int& i);
 
         // returns all member variables that are public or private
         std::vector<MemberVariable> getMemberVarByAccess(AccessLevel accessLevel);

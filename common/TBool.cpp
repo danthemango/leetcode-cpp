@@ -21,7 +21,7 @@ bool TBool::operator==(const TBool& other) {
 }
 
 bool TBool::tryParse(const std::string& input) {
-    int i = 0;
+    unsigned int i = 0;
     if(textParse::tryParseNextString(input, i, "true")) {
         this->val = true;
         return true;
