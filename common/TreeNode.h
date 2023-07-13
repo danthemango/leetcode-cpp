@@ -48,7 +48,6 @@ namespace tree {
     // returns true if successfully parsed a tree, updating out_node with the head
     bool tryParse(const std::string input, TreeNode*& out_node);
 
-
     // delete all nodes in a tree
     void deleteTree(TreeNode* head);
 

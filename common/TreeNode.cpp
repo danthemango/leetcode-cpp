@@ -84,7 +84,7 @@ namespace tree {
     }
 
     // returns the subtree at index i of the tree node values list
-    TreeNode* getNodeAtI(const std::vector<TreeVal>& treeValues, int i) {
+    TreeNode* getNodeAtI(const std::vector<TreeVal>& treeValues, unsigned int i) {
         if(treeValues.size() <= i) {
             return NULL;
         }
@@ -120,11 +120,10 @@ namespace tree {
     }
 
     // returns true if successfully parsed a tree, updating out_node with the head
-    bool tryParse(const std::string input, TreeNode*& out_node) {
+    bool tryParse(const std::string& input, TreeNode*& out_node) {
         unsigned int i = 0; 
         return tryParse(input, i, out_node);
     }
-
 
     // delete all nodes in a tree
     void deleteTree(TreeNode* head) {
@@ -138,7 +137,7 @@ namespace tree {
         delete head;
     }
 
-    TreeNode* string2tree(std::string input) {
+    TreeNode* string2tree(const std::string& input) {
         TreeNode* result;
         unsigned int i = 0;
         if(tryParse(input, i, result)) {

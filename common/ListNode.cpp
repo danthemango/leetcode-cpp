@@ -6,19 +6,25 @@ namespace linkedList {
     ListNode::ListNode(int x) : val(x), next(nullptr) {}
     std::ostream& operator<<(std::ostream& os, ListNode& l) {
         ListNode* head = &l;
-        os << "[";
-        bool first = true;
-        while(head != nullptr) {
-            if(first) {
-                first = false;
-            } else {
-                os << ",";
-            }
-            os << head->val;
-            head = head->next;
-        }
-        os << "]";
+        os << toString(head);
         return os;
+    }
+
+    bool ListNode::operator==(ListNode& other) const {
+        ListNode* head1 = (ListNode*) this;
+        ListNode* head2 = &other;
+        while(head1 != nullptr && head2 != nullptr) {
+            if(head1->val != head2->val) {
+                return false;
+            }
+            head1 = head1->next;
+            head2 = head2->next;
+        }
+        return head1 == nullptr && head2 == nullptr;
+    }
+
+    bool ListNode::operator!=(ListNode& other) const {
+        return !(*this == other);
     }
 
     // returns true if a listnode could be created

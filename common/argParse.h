@@ -25,6 +25,10 @@ class ArgParse {
     // (sort of like ffmpeg)
     bool tryParseIOFiles(std::ifstream& infile, std::ofstream& outfile);
 
+    // tries to fetch filenames with the format '-i <infile> -o <outfile>'
+    // (sort of like ffmpeg)
+    bool tryParseIOFileNames(std::string& inFileName, std::string& outFileName);
+
     bool hasHelp() const;
 };
 

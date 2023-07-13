@@ -62,6 +62,10 @@ namespace textParse {
 
     // returns all contents of a file to a string
     bool tryGetFileContents(const std::string& filename, std::string& out_contents);
+
+    std::string vectorInt2String(std::vector<int> arr);
+    std::string vectorString2string(std::vector<std::string> inputStringList);
+    std::string vectorVectorInt2String(std::vector<std::vector<int>> arrArr);
 }
 
 #endif // TEXTPARSE_H

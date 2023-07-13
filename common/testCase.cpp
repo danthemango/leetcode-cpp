@@ -12,7 +12,8 @@ std::map<std::string,std::string> knownTypes {
     {"vector<string>", "TVectorString"},
     {"ListNode*", "TListNode"},
     {"uint32_t", "TInt"}, // <- not sure about this one
-    {"vector<vector<int>>", "TVVInt"}
+    {"vector<vector<int>>", "TVVInt"},
+    {"vector<ListNode*>", "TVectorListNode"}
 };
 
 /*
@@ -51,6 +52,7 @@ bool tryParseExample(const std::string& input, int& out_int) {
     if(!tryParseNextString(input, i, "Example") || !tryParseInt(input, i, out_int) || !tryParseNextChar(input, i, ':')) {
         return false;
     }
+    return true;
 }
 
 // TODO: isdigit should only be used after the first char
@@ -285,12 +287,13 @@ bool TestCase::hasInput(std::string key) {
     return input.find(key) != input.end();
 }
 
-ostream & operator<<(ostream& os, TestCase& t) {
+std::ostream & operator<<(std::ostream& os, TestCase& t) {
     os << "Test case " << t.num << endl;
     for(const auto& pair : t.input) {
         os << "<- " << pair.first << ": " << pair.second << endl;
     }
     os << "-> " << t.expected << endl;
+    return os;
 }
 
 // creates a list of testcases from input

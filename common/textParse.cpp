@@ -1,4 +1,5 @@
 #include "textParse.h"
+#include <sstream>
 
 namespace textParse {
     int getDigit(char c) {
@@ -177,5 +178,75 @@ namespace textParse {
         }
         return true;
     }
-}
 
+    std::string vectorInt2String(std::vector<int> arr)
+    {
+        std::string result;
+        result.push_back('[');
+        bool first = true;
+        for (const int& val : arr)
+        {
+            if (!first)
+            {
+                result.push_back(',');
+            }
+            else
+            {
+                first = false;
+            }
+
+            result.push_back('"');
+            result.append(std::to_string(val));
+            result.push_back('"');
+        }
+        result.push_back(']');
+
+        return result;
+    }
+
+    std::string vectorString2string(std::vector<std::string> inputStringList)
+    {
+        std::string result;
+        result.push_back('[');
+        bool first = true;
+        for (const std::string &inputString : inputStringList)
+        {
+            if (!first)
+            {
+                result.push_back(',');
+            }
+            else
+            {
+                first = false;
+            }
+
+            result.push_back('"');
+            result.append(inputString);
+            result.push_back('"');
+        }
+        result.push_back(']');
+
+        return result;
+    }
+
+    std::string vectorVectorInt2String(std::vector<std::vector<int>> arrArr)
+    {
+        std::string result;
+        result.push_back('[');
+        bool first = true;
+        for (const auto &subArr : arrArr)
+        {
+            if (!first)
+            {
+                result.push_back(',');
+            }
+            else
+            {
+                first = false;
+            }
+            result.append(vectorInt2String(subArr));
+        }
+        result.push_back(']');
+        return result;
+    }
+}

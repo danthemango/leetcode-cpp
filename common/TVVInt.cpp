@@ -98,6 +98,6 @@ std::string vectorVectorInt2String(std::vector<std::vector<int>> arrArr) {
 }
 
 std::ostream &operator<<(std::ostream &os, TVVInt &t) {
-    os << vectorVectorInt2String(t.val);
+    os << textParse::vectorVectorInt2String(t.val);
     return os;
 }

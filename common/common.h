@@ -22,6 +22,9 @@
 #include "TString.h"
 #include "TTreeNode.h"
 #include "TListNode.h"
+#include "TVectorListNode.h"
 using namespace std;
+using linkedList::ListNode;
+using tree::TreeNode;
 
 #endif // COMMON_H

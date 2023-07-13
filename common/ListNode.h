@@ -17,7 +17,10 @@ namespace linkedList {
         ListNode();
         ListNode(int x);
         ListNode(int x, ListNode *next);
+        // extra
         friend std::ostream& operator<<(std::ostream& os, ListNode& l);
+        bool operator==(ListNode& other) const;
+        bool operator!=(ListNode& other) const;
     };
 
     // returns true if a listnode could be created

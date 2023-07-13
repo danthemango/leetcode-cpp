@@ -34,6 +34,18 @@ bool ArgParse::tryParseArg(const std::string& specifier, std::string& out_value)
     return false;
 }
 
+bool ArgParse::tryParseIOFileNames(std::string& inFileName, std::string& outFileName) {
+    if(!this->tryParseArg("-i", inFileName)) {
+        std::cerr << "could not find input filename" << endl;
+        return false;
+    }
+    if(!this->tryParseArg("-o", outFileName)) {
+        std::cerr << "could not find output filename" << endl;
+        return false;
+    }
+    return true;
+}
+
 // tries to fetch files with the format '-i <infile> -o <outfile>'
 // (sort of like ffmpeg)
 bool ArgParse::tryParseIOFiles(std::ifstream& infile, std::ofstream& outfile) {
