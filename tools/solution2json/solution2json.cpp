@@ -16,7 +16,7 @@ using namespace std;
     returning true if successful and setting the out_json
 */
 bool parseSolutionClass(const std::string& input, std::string& out_json) {
-    int i = 0;
+    unsigned int i = 0;
     std::string inputSC = stripComments(input);
     auto classDef = std::make_shared<ClassDef>();
 
@@ -46,7 +46,7 @@ bool parseSolutionClass(const std::string& input, std::string& out_json) {
 
     auto funcs = classDef->getMemberFuncByAccess(AccessLevel::_public);
     if(funcs.size() == 0) {
-        std::cerr << "Error (solution2json.cpp): could not find solution function" << endl;
+        std::cerr << "Error (solution2json.cpp): could not find solution function (is it private?)" << endl;
         return false;
     }
 
@@ -85,21 +85,38 @@ bool parseSolutionClass(const std::string& input, std::string& out_json) {
 
 int main(int argc, char** argv) {
     ArgParse argParse(argc, argv);
-    std::ifstream infile;
-    std::ofstream outfile;
+    std::string infileName;
+    std::string outfileName;
     if(argParse.hasHelp()) {
         std::cerr << "usage: -i <infile> -o <outfile>" << endl;
         return 1;
-    } else if(!argParse.tryParseIOFiles(infile, outfile)) {
+    } else if(!argParse.tryParseIOFileNames(infileName, outfileName)) {
         return 1;
+    } 
+
+    std::ifstream infile;
+    infile.open(infileName);
+    if (!infile.is_open())
+    {
+        std::cerr << "could not open infile" << endl;
+        std::cerr << infileName << endl;
+        return false;
     }
     std::string fileContents = file2String(infile);
     std::string jsonString;
     if(!parseSolutionClass(fileContents, jsonString)) {
         infile.close();
-        outfile.close();
         return 1;
     }
+
+    std::ofstream outfile;
+    outfile.open(outfileName);
+    if (!outfile.is_open())
+    {
+        std::cerr << "could not open outfile" << endl;
+        return false;
+    }
+
     outfile << jsonString;
     infile.close();
     outfile.close();

@@ -2,9 +2,11 @@ CC=g++ -g
 
 EXE=printTestcases
 DEPS=../../common/*.h ../../tools/*/*.cpp
+COMMON_DIR=../../common
+OBJ_DIR=$(COMMON_DIR)/obj
 
 $(EXE).exe: $(EXE).cpp $(DEPS)
-	${CC} $(EXE).cpp -o $(EXE).exe
+	${CC} $(EXE).cpp $(OBJ_DIR)/*.o -o $(EXE).exe
 
 clean:
 	rm -rf $(EXE).exe obj

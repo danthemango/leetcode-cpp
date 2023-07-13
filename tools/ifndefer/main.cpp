@@ -27,7 +27,7 @@ bool isFileChar(const char & c) {
     a headerFilename is 1 or more fileChar characters
     updating i on a successful parse
 */
-bool tryParseFilename(const std::string input, int& i, std::string& out_headerFilename) {
+bool tryParseFilename(const std::string input, unsigned int& i, std::string& out_headerFilename) {
     std::string headerFilename;
     int resetI = i;
     while(i < input.size() && isFileChar(input[i])) {
@@ -66,8 +66,8 @@ bool endsWith(const std::string& input, const std::string& pattern) {
     filling its headerPath and headerFilename parts
     expected input value: header.h or header.hpp
 */
-bool tryParseHeaderPath(const std::string input, int& i, std::string& out_headerPath, std::string& out_headerFilename) {
-    int resetI = i;
+bool tryParseHeaderPath(const std::string input, unsigned int& i, std::string& out_headerPath, std::string& out_headerFilename) {
+    unsigned int resetI = i;
     std::string headerPath;
     std::string headerFilename;
 
@@ -141,7 +141,7 @@ void printFile(const std::string headerFilename) {
     returns true if this line has a specific 'define' macro
 */
 bool hasDefine(const std::string& input, const std::string& defineName) {
-    int i = 0;
+    unsigned int i = 0;
     if (!tryParseNextChar(input, i, '#') || !tryParseNextString(input, i, "define") || tryParseNextChar(input, i, ' ')) {
         return false;
     }
@@ -196,7 +196,7 @@ int main(int argc, char** argv) {
     std::string headerFilePath = argv[1];
     std::string headerPath;
     std::string headerFilename;
-    int i = 0;
+    unsigned int i = 0;
     if(!tryParseHeaderPath(headerFilePath, i, headerPath, headerFilename)) {
         cout << "could not find header" << endl;
         return 1;
