@@ -116,8 +116,13 @@ int main(int argc, char** argv) {
             << "        std::cout << \"(\" << count << \"/\" << total << \")\" << std::endl;\n"
             << "    } catch (std::exception& e) {\n"
             << "        std::cout << \"exception: \" << e.what() << std::endl;\n"
+            << "        return 1;\n"
             << "    } catch (const char* s) {\n"
             << "        std::cout << \"exception: \" << s << std::endl;\n"
+            << "        return 2;\n"
+            << "    } catch (...) {\n"
+            << "        std::cout << \"exception occurred\" << std::endl;\n"
+            << "        return 3;\n"
             << "    }\n"
             << "    return 0;\n"
             << "}\n";

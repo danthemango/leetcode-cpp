@@ -1,4 +1,4 @@
-CC=g++ -g
+CC=g++ -g -Wall -Wextra
 
 COMMON_PATH=../common
 TOOL_PATH=../tools

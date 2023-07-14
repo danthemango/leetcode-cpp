@@ -24,3 +24,5 @@ echo "runner.exe:" >> $SUBMAKE
 printf "\tmake -C .. \$(BASENAME)/runner.exe\n" >> $SUBMAKE
 echo "clean:" >> $SUBMAKE
 printf "\trm -f runner.exe runner.cpp SolutionFunc.json\n" >> $SUBMAKE
+echo "commit:" >> $SUBMAKE
+printf "\tgit add . && git commit -m \"completed \$\$(pwd | sed 's/.*\///')\"" >> $SUBMAKE
