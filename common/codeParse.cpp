@@ -537,6 +537,99 @@ namespace codeParse {
         return false;
     }
 
+    bool tryParseNextStringVal(const std::string& input, unsigned int& i, std::string& out_val) {
+        skipSpace(input, i);
+        return tryParseStringVal(input, i, out_val);
+    }
+
+    bool tryParseVectorInt(const std::string& input, unsigned int& i, std::vector<int>& out_vector) {
+        unsigned int resetI = i;
+        std::vector<int> result;
+        if(!tryParseNextChar(input, i, '[')) {
+            i = resetI;
+            return false;
+        }
+
+        // keep parsing ints until we see the closing brace
+        bool first = true;
+        while(i < input.size()) {
+            if(tryParseNextChar(input, i, ']')) {
+                out_vector = result;
+                return true;
+            }
+
+            if(first) {
+                first = false;
+            } else if(!tryParseNextChar(input, i, ',')) {
+                i = resetI;
+                return false;
+            }
+
+            int intVal;
+            if(tryParseNextInt(input, i, intVal)) {
+                result.push_back(intVal);
+            } else {
+                // invalid value found
+                i = resetI;
+                return false;
+            }
+
+        }
+
+        // error: end of input with no closing brace
+        i = resetI;
+        return false;
+    }
+
+    bool tryParseVectorInt(const std::string& input, std::vector<int>& out_vector) {
+        unsigned int i = 0;
+        return tryParseVectorInt(input, i, out_vector);
+    }
+
+    bool tryParseVectorString(const std::string& input, unsigned int& i, std::vector<std::string>& out_vector) {
+        unsigned int resetI = i;
+        std::vector<std::string> result;
+        if(!tryParseNextChar(input, i, '[')) {
+            i = resetI;
+            return false;
+        }
+
+        // keep parsing ints until we see the closing brace
+        bool first = true;
+        while(i < input.size()) {
+            if(tryParseNextChar(input, i, ']')) {
+                out_vector = result;
+                return true;
+            }
+
+            if(first) {
+                first = false;
+            } else if(!tryParseNextChar(input, i, ',')) {
+                i = resetI;
+                return false;
+            }
+
+            std::string stringVal;
+            if(tryParseNextStringVal(input, i, stringVal)) {
+                result.push_back(stringVal);
+            } else {
+                // invalid value found
+                i = resetI;
+                return false;
+            }
+
+        }
+
+        // error: end of input with no closing brace
+        i = resetI;
+        return false;
+    }
+
+    bool tryParseVectorString(const std::string& input, std::vector<std::string>& out_vector) {
+        unsigned int i = 0;
+        return tryParseVectorString(input, i, out_vector);
+    }
+
     std::string AssignmentDef::toString() const {
         std::string result;
         result.append(variableDef.toString());

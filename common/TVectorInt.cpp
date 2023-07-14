@@ -1,5 +1,5 @@
 #include "TVectorInt.h"
-#include "textParse.h"
+#include "codeParse.h"
 
 /* testcase vector type */
 TVectorInt::TVectorInt() { }
@@ -29,7 +29,7 @@ bool TVectorInt::operator==(const TVectorInt& other) {
 }
 
 bool TVectorInt::tryParse(const std::string& input) {
-    return textParse::tryParseVectorInt(input, val);
+    return codeParse::tryParseVectorInt(input, val);
 }
 
 std::ostream& operator<<(std::ostream& os, TVectorInt& t) {

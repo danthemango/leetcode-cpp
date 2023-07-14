@@ -1,18 +1,18 @@
-#include "TVVInt.h"
+#include "TVVString.h"
 #include "textParse.h"
 #include "codeParse.h"
 #include <string>
 #include <iostream>
 
-TVVInt::TVVInt() { }
+TVVString::TVVString() { }
 
-TVVInt::TVVInt(std::vector<std::vector<int>> _val) : val(_val) { }
+TVVString::TVVString(std::vector<std::vector<std::string>> _val) : val(_val) { }
 
-std::vector<std::vector<int>>& TVVInt::get() {
+std::vector<std::vector<std::string>>& TVVString::get() {
     return val;
 }
 
-bool TVVInt::operator==(const std::vector<std::vector<int>>& other) {
+bool TVVString::operator==(const std::vector<std::vector<std::string>>& other) {
     if(this->val.size() != other.size()) {
         return false;
     }
@@ -33,11 +33,11 @@ bool TVVInt::operator==(const std::vector<std::vector<int>>& other) {
     return true;
 }
 
-bool TVVInt::operator==(const TVVInt &other) {
+bool TVVString::operator==(const TVVString &other) {
     return *this == other.val;
 }
 
-bool TVVInt::tryParse(const std::string &input) {
+bool TVVString::tryParse(const std::string &input) {
     unsigned int i = 0;
 
     if(!textParse::tryParseNextChar(input, i, '[')) {
@@ -56,8 +56,8 @@ bool TVVInt::tryParse(const std::string &input) {
             return false;
         }
 
-        std::vector<int> subArr;
-        if(!codeParse::tryParseVectorInt(input, i, subArr)) {
+        std::vector<std::string> subArr;
+        if(!codeParse::tryParseVectorString(input, i, subArr)) {
             return false;
         }
         this->val.push_back(subArr);
@@ -65,23 +65,25 @@ bool TVVInt::tryParse(const std::string &input) {
     return false;
 }
 
-std::string vectorInt2String(std::vector<int> arr) {
+std::string vectorString2String(std::vector<std::string> arr) {
     std::string result;
     result.push_back('[');
     bool first = true;
-    for(const int& num : arr) {
+    for(const std::string& str : arr) {
         if(!first) {
             result.push_back(',');
         } else {
             first = false;
         }
-        result.append(std::to_string(num));
+        result.push_back('"');
+        result.append(str);
+        result.push_back('"');
     }
     result.push_back(']');
     return result;
 }
 
-std::string vectorVectorInt2String(std::vector<std::vector<int>> arrArr) {
+std::string vectorVectorString2String(std::vector<std::vector<std::string>> arrArr) {
     std::string result;
     result.push_back('[');
     bool first = true;
@@ -91,13 +93,13 @@ std::string vectorVectorInt2String(std::vector<std::vector<int>> arrArr) {
         } else {
             first = false;
         }
-        result.append(vectorInt2String(subArr));
+        result.append(vectorString2String(subArr));
     }
     result.push_back(']');
     return result;
 }
 
-std::ostream &operator<<(std::ostream &os, TVVInt &t) {
-    os << textParse::vectorVectorInt2String(t.val);
+std::ostream &operator<<(std::ostream &os, TVVString &t) {
+    os << vectorVectorString2String(t.val);
     return os;
 }

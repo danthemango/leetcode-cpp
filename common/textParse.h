@@ -49,10 +49,6 @@ namespace textParse {
 
     bool tryParseNextInt(const std::string& input, unsigned int& i, int& out_int);
 
-    bool tryParseVectorInt(const std::string& input, unsigned int& i, std::vector<int>& out_vector);
-
-    bool tryParseVectorInt(const std::string& input, std::vector<int>& out_vector);
-
     // fetches all stdin input and returns it as a string
     // (for quick development, not space efficient)
     std::string stdin2String();

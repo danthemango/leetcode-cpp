@@ -126,6 +126,17 @@ namespace codeParse {
 
     bool tryParseStringVal(const std::string& input, unsigned int& i, std::string& out_val);
 
+    bool tryParseNextStringVal(const std::string& input, unsigned int& i, std::string& out_val);
+
+    bool tryParseVectorInt(const std::string& input, unsigned int& i, std::vector<int>& out_vector);
+
+    bool tryParseVectorInt(const std::string& input, std::vector<int>& out_vector);
+
+    bool tryParseVectorString(const std::string& input, unsigned int& i, std::vector<std::string>& out_vector);
+
+    bool tryParseVectorString(const std::string& input, std::vector<std::string>& out_vector);
+
+
     /* a variable assignment */
     class AssignmentDef {
         public:

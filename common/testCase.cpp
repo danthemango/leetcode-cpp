@@ -14,7 +14,8 @@ std::map<std::string,std::string> knownTypes {
     {"uint32_t", "TInt"}, // <- not sure about this one
     {"vector<vector<int>>", "TVVInt"},
     {"vector<ListNode*>", "TVectorListNode"},
-    {"vector<NullableBool>", "TVectorNullableBool"}
+    {"vector<NullableBool>", "TVectorNullableBool"},
+    {"vector<vector<string>>", "TVVString"}
 };
 
 /*

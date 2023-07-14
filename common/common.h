@@ -17,6 +17,7 @@
 // #include "TVector.h"
 #include "TVectorInt.h"
 #include "TVVInt.h"
+#include "TVVString.h"
 #include "TBool.h"
 #include "TInt.h"
 #include "TString.h"

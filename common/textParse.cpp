@@ -105,48 +105,7 @@ namespace textParse {
         skipSpace(input, i);
         return tryParseInt(input, i, out_int);
     }
-    bool tryParseVectorInt(const std::string& input, unsigned int& i, std::vector<int>& out_vector) {
-        unsigned int resetI = i;
-        std::vector<int> result;
-        if(!tryParseNextChar(input, i, '[')) {
-            i = resetI;
-            return false;
-        }
 
-        // keep parsing ints until we see the closing brace
-        bool first = true;
-        while(i < input.size()) {
-            if(tryParseNextChar(input, i, ']')) {
-                out_vector = result;
-                return true;
-            }
-
-            if(first) {
-                first = false;
-            } else if(!tryParseNextChar(input, i, ',')) {
-                i = resetI;
-                return false;
-            }
-
-            int intVal;
-            if(tryParseNextInt(input, i, intVal)) {
-                result.push_back(intVal);
-            } else {
-                // invalid value found
-                i = resetI;
-                return false;
-            }
-
-        }
-
-        // error: end of input with no closing brace
-        i = resetI;
-        return false;
-    }
-    bool tryParseVectorInt(const std::string& input, std::vector<int>& out_vector) {
-        unsigned int i = 0;
-        return tryParseVectorInt(input, i, out_vector);
-    }
     std::string stdin2String() {
         std::string result;
         std::string line;
