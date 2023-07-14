@@ -13,7 +13,8 @@ std::map<std::string,std::string> knownTypes {
     {"ListNode*", "TListNode"},
     {"uint32_t", "TInt"}, // <- not sure about this one
     {"vector<vector<int>>", "TVVInt"},
-    {"vector<ListNode*>", "TVectorListNode"}
+    {"vector<ListNode*>", "TVectorListNode"},
+    {"vector<NullableBool>", "TVectorNullableBool"}
 };
 
 /*
@@ -34,6 +35,7 @@ bool tryParseTestType(const std::string& inTypeString, std::string& out_testType
         std::cerr << "Error (testCase.cpp): could not parse type: " << inTypeString << endl;
         return false;
     }
+
     if(!isKnownType(varType)) {
         std::cerr << "Error (testCase.cpp): type not yet implemented: " << inTypeString << endl;
         return false;

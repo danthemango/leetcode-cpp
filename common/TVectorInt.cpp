@@ -4,9 +4,7 @@
 /* testcase vector type */
 TVectorInt::TVectorInt() { }
 
-TVectorInt::TVectorInt(std::vector<int> _val) {
-    val = _val;
-}
+TVectorInt::TVectorInt(std::vector<int> _val) : val(_val) { }
 
 std::vector<int>& TVectorInt::get() {
     return val;

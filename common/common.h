@@ -23,6 +23,8 @@
 #include "TTreeNode.h"
 #include "TListNode.h"
 #include "TVectorListNode.h"
+#include "NullableBool.h"
+#include "TVectorNullableBool.h"
 using namespace std;
 using linkedList::ListNode;
 using tree::TreeNode;

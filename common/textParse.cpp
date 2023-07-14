@@ -121,13 +121,11 @@ namespace textParse {
                 return true;
             }
 
-            if(!first) {
-                if(!tryParseNextChar(input, i, ',')) {
-                    i = resetI;
-                    return false;
-                }
-            } else {
+            if(first) {
                 first = false;
+            } else if(!tryParseNextChar(input, i, ',')) {
+                i = resetI;
+                return false;
             }
 
             int intVal;
