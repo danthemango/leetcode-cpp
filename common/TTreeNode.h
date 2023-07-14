@@ -7,15 +7,15 @@
 /* testtype tree type handler */
 class TTreeNode {
     public:
-    tree::TreeNode* val;
+    TreeNode* val;
 
     TTreeNode();
 
-    TTreeNode(tree::TreeNode* _val);
+    TTreeNode(TreeNode* _val);
 
-    tree::TreeNode*& get();
+    TreeNode*& get();
 
-    bool operator==(tree::TreeNode*& other);
+    bool operator==(TreeNode*& other);
 
     bool operator==(TTreeNode& other);
 

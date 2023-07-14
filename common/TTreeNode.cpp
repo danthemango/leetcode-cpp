@@ -3,26 +3,39 @@
 /* testtype tree type handler */
 TTreeNode::TTreeNode() { }
 
-TTreeNode::TTreeNode(tree::TreeNode* _val) : val(_val) { }
+TTreeNode::TTreeNode(TreeNode* _val) : val(_val) { }
 
-tree::TreeNode*& TTreeNode::get() {
+TreeNode*& TTreeNode::get() {
     return val;
 }
 
-bool TTreeNode::operator==(tree::TreeNode*& other) {
-    return tree::isEqual(this->val, other);
+bool TTreeNode::operator==(TreeNode*& other) {
+    if(this->val == nullptr || other == nullptr) {
+        return this->val == other;
+    } else {
+        return *this->val == *other;
+    }
 }
 
 bool TTreeNode::operator==(TTreeNode& other) {
-    return tree::isEqual(this->val, other.val);
+    if(this->val == nullptr || other.val == nullptr) {
+        return this->val == other.val;
+    } else {
+        return *this->val == *other.val;
+    }
 }
 
 bool TTreeNode::tryParse(const std::string& input) {
     unsigned int i = 0;
-    return tree::tryParse(input, i, this->val);
+    return TreeNode::tryParse(input, i, this->val);
 }
 
 std::ostream& operator<<(std::ostream& os, TTreeNode& t) {
-    os << tree::tree2string(t.val) << std::endl;
-    return os;
+    if(t.val == nullptr) {
+        os << "[]";
+        return os;
+    } else {
+        os << t.val;
+        return os;
+    }
 }

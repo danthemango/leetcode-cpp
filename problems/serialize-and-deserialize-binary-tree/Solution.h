@@ -13,7 +13,9 @@ class Codec {
 
     std::string serialize(TreeNode* root) {
         std::queue<TreeNode*> valQueue;
-        valQueue.push(root);
+        if(root != nullptr) {
+            valQueue.push(root);
+        }
         std::string result;
         result.push_back('[');
         bool first = true;

@@ -6,202 +6,237 @@
 #include "TreeNode.h"
 #include "textParse.h"
 
-namespace tree {
+TreeNode::TreeNode() : val(0), left(nullptr), right(nullptr) {}
+TreeNode::TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+TreeNode::TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+
+std::string node2string(TreeNode* node) {
+    if(node == nullptr) {
+        return "null";
+    } else {
+        return std::to_string(node->val);
+    }
+}
+
+bool TreeNode::operator==(TreeNode& other) const {
+    if(this->val != other.val) {
+        return false;
+    }
+    if(this->left == nullptr || other.left == nullptr) {
+        return this->left == other.left;
+    }
+    if(this->right == nullptr || other.right == nullptr) {
+        return this->right == other.right;
+    }
+    return *this->left == *other.left && *this->right == *other.right;
+}
+
+void TreeNode::deleteTree(TreeNode* root) {
+    if(root == nullptr) {
+        return;
+    }    
+    TreeNode* left = root->left;
+    TreeNode* right = root->right;
+    delete root;
+    deleteTree(left);
+    deleteTree(right);
+}
+
+std::string tree2string(TreeNode* root) {
+    std::queue<TreeNode*> valQueue;
+    if(root != nullptr) {
+        valQueue.push(root);
+    }
+    std::string result;
+    result.push_back('[');
+    bool first = true;
+    while(!valQueue.empty()) {
+        if(!first) {
+            result.push_back(',');
+        }
+        first = false;
+
+        TreeNode* node = valQueue.front();
+        valQueue.pop();
+        std::string stringVal = node2string(node);
+        result.append(stringVal);
+        if(node != nullptr) {
+            valQueue.push(node->left);
+            valQueue.push(node->right);
+        }
+    }
+    result.push_back(']');
+    return result;
+}
+
+std::ostream& operator<<(std::ostream& os, TreeNode* tn) {
+    os << tree2string(tn);
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, TreeNode& tn) {
+    os << &tn;
+    return os;
+}
+
+bool tryParseNextTreeNode(const std::string& input, unsigned int& i, TreeNode*& out_node) { 
     using namespace textParse;
+    int intVal;
+    skipSpace(input, i);
+    if(tryParseNextString(input, i, "null")) {
+        out_node = nullptr;
+        return true;
+    } else if(tryParseNextInt(input, i, intVal)) {
+        out_node = new TreeNode(intVal);
+        return true;
+    } else {
+        return false;
+    }
+}
 
-    TreeNode::TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode::TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode::TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
-
-    std::string val2string(const TreeVal& treeVal) {
-        if(treeVal.isNull) {
-            return "null";
-        } else {
-            return std::to_string(treeVal.val);
+// deletes all node pointers that have been set
+void deleteNodeVector(std::vector<TreeNode*> arr) {
+    for(TreeNode*& node : arr) {
+        if(node != nullptr) {
+            delete node;
+            node = nullptr;
         }
     }
+}
 
-    // parses tree node value, either int or null
-    // returns true if successful
-    // updating i to the next char after a successful match
-    bool tryParseVal(std::string input, unsigned int& i, TreeVal& out_val) {
-        unsigned int resetI = i;
-        skipSpace(input, i);
-        if(tryParseInt(input, i, out_val.val)) {
-            out_val.isNull = false;
-            return true;
-        } else if(tryParseString(input, i, "null")) {
-            out_val.isNull = true;
-            return true;
-        } else {
-            i = resetI;
-            return false;
-        }
-    }
+class TreeVector {
+    public:
+    std::vector<TreeNode*> vals;
+    // delete entries if never fetched
+    bool fetched = false;
 
-    // attempts to parse a node list from input string at i
-    // with a format similar to: [54,3,null,4]
-    // returns true if successful
-    // and updating i to the position after a successful match
-    bool tryParseValList(std::string input, unsigned int& i, std::vector<TreeVal>& out_list) {
-        int resetI = i;
-        if(!tryParseNextChar(input, i, '[')) {
-            i = resetI;
-            return false;
+    ~TreeVector() {
+        if(fetched) {
+            return;
         }
 
-        TreeVal treeVal;
-        // if true, expect a comma before any next value
-        // assuming we aren't at the end of the list
-        bool expectComma = false;
-
-        while(i < input.size()) {
-            // closing brace
-            if(tryParseNextChar(input, i, ']')) {
-                // end of list
-                return true;
-            // parse a comma if expected
-            } else if(expectComma) {
-                if(!tryParseNextChar(input, i, ',')) {
-                    // improperly formatted list
-                    i = resetI;
-                    return false;
-                } else {
-                    expectComma = false;
-                }
-            } else if(tryParseVal(input, i, treeVal)) {
-                out_list.push_back(treeVal);
-                expectComma = true;
-            } else {
-                i = resetI;
-                return false;
+        for(TreeNode*& val : vals) {
+            if(val != nullptr) {
+                delete val;
             }
         }
+    }
 
-        // fail, the closing brace should have been found in the loop
+    void push_back(TreeNode* val) {
+        this->vals.push_back(val);
+    }
+
+    std::vector<TreeNode*> get() {
+        fetched = true;
+        return this->vals;
+    }
+};
+
+// tries to parse an array of treenodes
+bool tryParseTreeNodeVector(const std::string& input, unsigned int& i, std::vector<TreeNode*>& out_arr) {
+    TreeVector treeVector;
+    unsigned int resetI = i;
+    using namespace textParse;
+    if(!tryParseNextChar(input, i, '[')) {
+        i = resetI;
+        return false;
+    }
+    bool first = true;
+    while(i < input.size()) {
+        if(tryParseNextChar(input, i, ']')) {
+            out_arr = treeVector.get();
+            return true;
+        }
+        if(first) {
+            first = false;
+        } else if(!tryParseNextChar(input, i, ',')) {
+            i = resetI;
+            return false;
+        }
+
+        TreeNode* node;
+        if(!tryParseNextTreeNode(input, i, node)) {
+            i = resetI;
+            return false;
+        } else {
+            treeVector.push_back(node);
+        }
+    }
+    i = resetI;
+    return false;
+}
+
+// depending on the node state, the new node will be put on 
+// the left of the current node, the right of the current node,
+// or we need to request a new node for the next value
+enum class NodeState { left, right, needNew };
+
+std::ostream& operator<<(std::ostream& os, std::vector<TreeNode*> arr) {
+    os << '[';
+    bool first = true;
+    for(TreeNode*& node : arr) {
+        if(first) {
+            first = false;
+        } else {
+            os << ',';
+        }
+        if(node == nullptr) {
+            os << "null";
+        } else {
+            os << node->val;
+        }
+    }
+    os << ']';
+    return os;
+}
+
+bool TreeNode::tryParse(const std::string& input, unsigned int& i, TreeNode*& out_root) {
+    int resetI = i;
+    out_root = nullptr;
+
+    std::vector<TreeNode*> arr;
+    if(!tryParseTreeNodeVector(input, i, arr)) {
         i = resetI;
         return false;
     }
 
-    // returns the subtree at index i of the tree node values list
-    TreeNode* getNodeAtI(const std::vector<TreeVal>& treeValues, unsigned int i) {
-        if(treeValues.size() <= i) {
-            return NULL;
-        }
-
-        if(treeValues[i].isNull) {
-            return NULL;
-        }
-
-        TreeNode* node = new TreeNode(treeValues[i].val);
-        node->left = getNodeAtI(treeValues, 2*i+1);
-        node->right = getNodeAtI(treeValues, 2*i+2);
-        return node;
-    }
-
-    bool tryParse(std::string input, unsigned int& i, TreeNode*& out_node) {
-        std::vector<TreeVal> treeValList;
-        if(!tryParseValList(input, i, treeValList)) {
-            out_node = NULL;
-            return false;
-        }
-
-        /*
-            iterate over the tree values, creating new pointers if
-            they are not specified to be null
-            note: use a recursive algorithm which
-            parses the left subtree at 2*i+1 for the left value
-            and 2*i+1 for the right subtree, for a given index i
-            of the vector
-        */
-
-        out_node = getNodeAtI(treeValList, 0);
+    if(arr.size() == 0 || arr[0] == nullptr) {
         return true;
     }
 
-    // returns true if successfully parsed a tree, updating out_node with the head
-    bool tryParse(const std::string& input, TreeNode*& out_node) {
-        unsigned int i = 0; 
-        return tryParse(input, i, out_node);
+    std::queue<TreeNode*> nodeQueue;
+    unsigned int arrI = 0;
+    out_root = arr[arrI];
+    if(out_root != nullptr) {
+        nodeQueue.push(out_root);
+    } else {
+        return true;
     }
-
-    // delete all nodes in a tree
-    void deleteTree(TreeNode* head) {
-        if(!head) {
-            return;
-        }
-        deleteTree(head->left);
-        head->left = NULL;
-        deleteTree(head->right);
-        head->right = NULL;
-        delete head;
-    }
-
-    TreeNode* string2tree(const std::string& input) {
-        TreeNode* result;
-        unsigned int i = 0;
-        if(tryParse(input, i, result)) {
-            return result;
-        } else {
-            return NULL;
-        }
-    }
-
-    int getTreeSize(TreeNode* head) {
-        if(!head) {
-            return 0;
-        }
-        int tl = getTreeSize(head->left);
-        int tr = getTreeSize(head->right);
-        return 1 + tl + tr;
-    }
-
-    std::string tree2string(TreeNode* head) {
-        std::stringstream ss;
-
-        ss << '[';
-
-        std::queue<TreeNode*> nodeQueue;
-        if(head) {
-            nodeQueue.push(head);
-        }
-
-        bool first = true;
-
-        while(!nodeQueue.empty()) {
-            TreeNode* node = nodeQueue.front();
+    TreeNode* cur = nullptr;
+    NodeState nodeState = NodeState::needNew;
+    ++arrI;
+    while(arrI < arr.size()) {
+        TreeNode* newNode = arr[arrI];
+        ++arrI;
+        if(nodeState == NodeState::left) {
+            cur->left = newNode;
+            nodeState = NodeState::right;
+        } else if(nodeState == NodeState::right) {
+            cur->right = newNode;
+            nodeState = NodeState::needNew;
+        } else if(nodeState == NodeState::needNew) {
+            cur = nodeQueue.front();
             nodeQueue.pop();
-            
-            if(!first) {
-                ss << ",";
-            } else {
-                first = false;
-            }
-
-            if(!node) {
-                ss << "null";
-            } else {
-                ss << node->val;
-                nodeQueue.push(node->left);
-                nodeQueue.push(node->right);
-            }
-        }
-
-        ss << ']';
-
-        std::string result;
-        ss >> result;
-        return result;
-    }
-
-    // returns true if a equals b
-    bool isEqual(TreeNode*& a, TreeNode*& b) {
-        if(!a || !b) {
-            return a == b;
-        } else if(a->val != b->val) {
-            return false;
+            cur->left = newNode;
+            nodeState = NodeState::right;
         } else {
-            return isEqual(a->left, b->left) && isEqual(a->right, b->right);
+            throw "should never happen";
+        }
+
+        if(newNode != nullptr) {
+            nodeQueue.push(newNode);
         }
     }
+
+    return true;
 }

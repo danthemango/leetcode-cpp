@@ -48,31 +48,6 @@ Input: n = 15
 Output: ["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"]
 */
 
-std::string vector2string(std::vector<std::string> inputStringList)
-{
-    stringstream ss;
-    ss << '[';
-    bool first = true;
-    for (const std::string &inputString : inputStringList)
-    {
-        if (!first)
-        {
-            ss << ',';
-        }
-        else
-        {
-            first = false;
-        }
-
-        ss << '"' << inputString << '"';
-    }
-    ss << ']';
-
-    std::string result;
-    ss >> result;
-    return result;
-}
-
 // int main() {
 //     Solution solution;
 //     int input = 15;

@@ -27,6 +27,5 @@
 #include "TVectorNullableBool.h"
 using namespace std;
 using linkedList::ListNode;
-using tree::TreeNode;
 
 #endif // COMMON_H
