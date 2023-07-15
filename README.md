@@ -17,7 +17,7 @@ Matrix
 - [x] set-matrix-zeroes
 - [ ] Spiral Matrix - https://leetcode.com/problems/spiral-matrix/
 - [x] rotate-image
-- [ ] Word Search - https://leetcode.com/problems/word-search/
+- [x] word-search
 
 String
 - [x] longest-substring-without-repeating-characters
@@ -42,13 +42,12 @@ Tree
 - [ ] Construct Binary Tree from Preorder and Inorder Traversal - https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
 - [x] validate-binary-search-tree
 - [x] kth-smallest-element-in-a-bst
-- [x] Lowest Common Ancestor of BST - https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
-- [ ] Implement Trie (Prefix Tree) - https://leetcode.com/problems/implement-trie-prefix-tree/
+- [x] Lowest Common Ancestor of BST
+- [x] Implement Trie (Prefix Tree)
 - [ ] Add and Search Word - https://leetcode.com/problems/add-and-search-word-data-structure-design/
 - [ ] Word Search II - https://leetcode.com/problems/word-search-ii/
 
 Heap
-- [ ] Merge K Sorted Lists - https://leetcode.com/problems/merge-k-sorted-lists/
 - [ ] Top K Frequent Elements - https://leetcode.com/problems/top-k-frequent-elements/
 - [ ] Find Median from Data Stream - https://leetcode.com/problems/find-median-from-data-stream/
 
