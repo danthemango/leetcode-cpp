@@ -41,6 +41,7 @@ namespace codeParse {
         bool isConst = false;
         // static type
         bool isStatic = false;
+        bool isUnsigned = false;
         // levels of indirection (1 = type*, 2 = type**, ...)
         int pointerLevel = 0;
 
@@ -124,9 +125,17 @@ namespace codeParse {
         bool tryParseScope(const std::string& input, unsigned int& i);
     };
 
+    // returns true if a string value has been parsed, with quotes
     bool tryParseStringVal(const std::string& input, unsigned int& i, std::string& out_val);
 
+    // returns true if a string value has been parsed, with quotes after whitespace
     bool tryParseNextStringVal(const std::string& input, unsigned int& i, std::string& out_val);
+
+    // returns true if a string value has been parsed, without quotes
+    bool tryParseNextStringValContent(const std::string& input, unsigned int& i, std::string& out_val);
+
+    // returns true if a string value has been parsed, without quotes, after whitespace
+    bool tryParseNextStringValContent(const std::string& input, std::string& out_val);
 
     bool tryParseVectorInt(const std::string& input, unsigned int& i, std::vector<int>& out_vector);
 

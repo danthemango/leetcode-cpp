@@ -191,6 +191,9 @@ namespace codeParse {
                 result.append("static ");
             }
         }
+        if(isUnsigned) {
+            result.append("unsigned ");
+        }
         for(const std::string& ns : namespaces) {
             result.append(ns);
             result.append("::");
@@ -261,6 +264,8 @@ namespace codeParse {
                 isConst = true;
             } else if(tryParseKeyword(input, i, "static")) {
                 isStatic = true;
+            } else if(tryParseKeyword(input, i, "unsigned")) {
+                isUnsigned = true;
             } else {
                 break;
             }
@@ -537,9 +542,29 @@ namespace codeParse {
         return false;
     }
 
+    // tries to parse a string value with the quotes intact
     bool tryParseNextStringVal(const std::string& input, unsigned int& i, std::string& out_val) {
         skipSpace(input, i);
         return tryParseStringVal(input, i, out_val);
+    }
+
+    // tries to parse a string value content inside the quotes
+    bool tryParseNextStringValContent(const std::string& input, unsigned int& i, std::string& out_val) {
+        int resetI = i;
+        skipSpace(input, i);
+        std::string outer_val;
+        if(!tryParseStringVal(input, i, outer_val)) {
+            i = resetI;
+            return false;
+        } else {
+            out_val = outer_val.substr(1, outer_val.size()-2);
+            return true;
+        }
+    }
+
+    bool tryParseNextStringValContent(const std::string& input, std::string& out_val) {
+        unsigned int i = 0;
+        return tryParseNextStringValContent(input, i, out_val);
     }
 
     bool tryParseVectorInt(const std::string& input, unsigned int& i, std::vector<int>& out_vector) {
