@@ -1,16 +1,16 @@
-#include "TVectorNullableBool.h"
+#include "TVectorNullableResult.h"
 #include "textParse.h"
 using textParse::tryParseNextChar;
 
-TVectorNullableBool::TVectorNullableBool() { }
+TVectorNullableResult::TVectorNullableResult() { }
 
-TVectorNullableBool::TVectorNullableBool(std::vector<NullableBool> _val) : val(_val) { }
+TVectorNullableResult::TVectorNullableResult(std::vector<NullableResult> _val) : val(_val) { }
 
-std::vector<NullableBool>& TVectorNullableBool::get() {
+std::vector<NullableResult>& TVectorNullableResult::get() {
     return this->val;
 }
 
-bool TVectorNullableBool::operator==(const std::vector<NullableBool>& other) {
+bool TVectorNullableResult::operator==(const std::vector<NullableResult>& other) const {
     if(this->val.size() != other.size()) {
         return false;
     }
@@ -22,11 +22,11 @@ bool TVectorNullableBool::operator==(const std::vector<NullableBool>& other) {
     return true;
 }
 
-bool TVectorNullableBool::operator==(const TVectorNullableBool& other) {
+bool TVectorNullableResult::operator==(const TVectorNullableResult& other) const {
     return *this == other.val;
 }
 
-bool TVectorNullableBool::tryParse(const std::string& input) {
+bool TVectorNullableResult::tryParse(const std::string& input) {
     unsigned int i = 0;
     if(!tryParseNextChar(input, i, '[')) {
         return false;
@@ -43,26 +43,26 @@ bool TVectorNullableBool::tryParse(const std::string& input) {
             return false;
         }
 
-        NullableBool nb;
-        if(!tryParseNullableBool(input, i, nb)) {
+        NullableResult nr;
+        if(!nr.tryParse(input, i)) {
             return false;
         } else {
-            this->val.push_back(nb);
+            this->val.push_back(nr);
         }
     }
     return false;
 }
 
-std::ostream& operator<<(std::ostream& os, TVectorNullableBool& t) {
+std::ostream& operator<<(std::ostream& os, TVectorNullableResult& t) {
     os << '[';
     bool first = true;
-    for(const NullableBool& nb : t.val) {
+    for(const NullableResult& nr : t.val) {
         if(!first) {
             os << ',';
         } else {
             first = false;
         }
-        os << nullableBool2string(nb);
+        os << nr.toString();
     }
     os << ']';
     return os;

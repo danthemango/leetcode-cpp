@@ -1,6 +1,7 @@
 #include "TVVString.h"
 #include "textParse.h"
 #include "codeParse.h"
+#include "TVectorString.h"
 #include <string>
 #include <iostream>
 
@@ -57,7 +58,7 @@ bool TVVString::tryParse(const std::string &input) {
         }
 
         std::vector<std::string> subArr;
-        if(!codeParse::tryParseVectorString(input, i, subArr)) {
+        if(!TVectorString::tryParseVectorString(input, i, subArr)) {
             return false;
         }
         this->val.push_back(subArr);

@@ -24,8 +24,8 @@
 #include "TTreeNode.h"
 #include "TListNode.h"
 #include "TVectorListNode.h"
-#include "NullableBool.h"
-#include "TVectorNullableBool.h"
+#include "NullableResult.h"
+#include "TVectorNullableResult.h"
 using namespace std;
 using linkedList::ListNode;
 

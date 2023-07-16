@@ -49,8 +49,11 @@ int main(int argc, char** argv) {
 
     outfile << "#include \"../../common/common.h\"\n"
         << "#include \"../../common/testCase.h\"\n"
+        << "#include \"../../common/argParse.h\"\n"
         << "#include \"Solution.h\"\n"
         << "\n\n"
+        << "bool SILENT = false;\n"
+        << "\n"
         << "enum Status {\n"
         << "    error,\n"
         << "    success,\n"
@@ -58,7 +61,9 @@ int main(int argc, char** argv) {
         << "};"
         << "\n\n"
         << "Status runSolution(std::shared_ptr<TestCase> testCase) {\n"
-        << "    std::cout << *testCase;\n";
+        << "    if (!SILENT) {\n"
+        << "        std::cout << *testCase;\n"
+        << "    }\n";
 
         // print input types
         for(const auto& arg : solutionFunction->args) {
@@ -87,7 +92,9 @@ int main(int argc, char** argv) {
             << "    " << solutionFunction->testType << " output(solution." << solutionFunction->name << "(" << argsRunString(solutionFunction->args) << "));\n";
 
         outfile
-            << "    std::cout << \"output: \" << output << std::endl;\n"
+            << "    if (!SILENT) {\n"
+            << "        std::cout << \"output: \" << output << std::endl;\n"
+            << "    }\n"
             << '\n'
             << "    if(expected == output) {\n"
             << "        std::cout << \"Success.\" << std::endl << std::endl;\n"
@@ -100,6 +107,10 @@ int main(int argc, char** argv) {
             << '\n'
             << "int main(int argc, char** argv) {\n"
             << "    try {\n"
+            << "        ArgParse argParse(argc, argv);\n"
+            << "        if(argParse.hasArg(\"--silent\")) {\n"
+            << "            SILENT = true;\n"
+            << "        }\n"
             << "        auto in = getStream(\"readme.md\");\n"
             << "        auto testCases = getTestCases(in);\n"
             << "        int count = 0;\n"
@@ -115,13 +126,13 @@ int main(int argc, char** argv) {
             << "        }\n"
             << "        std::cout << \"(\" << count << \"/\" << total << \")\" << std::endl;\n"
             << "    } catch (std::exception& e) {\n"
-            << "        std::cout << \"exception: \" << e.what() << std::endl;\n"
+            << "        std::cerr << \"exception: \" << e.what() << std::endl;\n"
             << "        return 1;\n"
             << "    } catch (const char* s) {\n"
-            << "        std::cout << \"exception: \" << s << std::endl;\n"
+            << "        std::cerr << \"exception: \" << s << std::endl;\n"
             << "        return 2;\n"
             << "    } catch (...) {\n"
-            << "        std::cout << \"exception occurred\" << std::endl;\n"
+            << "        std::cerr << \"exception occurred\" << std::endl;\n"
             << "        return 3;\n"
             << "    }\n"
             << "    return 0;\n"

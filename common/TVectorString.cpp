@@ -59,14 +59,14 @@ bool TVectorString::tryParseStringValue(const std::string& input, unsigned int& 
     return false;
 }
 
-bool TVectorString::tryParse(const std::string& input) {
-    unsigned int i = 0;
+bool TVectorString::tryParseVectorString(const std::string& input, unsigned int& i, std::vector<std::string>& out_val) {
     if(!textParse::tryParseNextChar(input, i, '[')) {
         return false;
     }
     // bool inString = false;
     bool isFirst = true;
 
+    out_val.clear();
     while(i < input.size()) {
         if(textParse::tryParseNextChar(input, i, ']')) {
             return true;
@@ -84,9 +84,14 @@ bool TVectorString::tryParse(const std::string& input) {
         if(!tryParseStringValue(input, i, nextVal)) {
             return false;
         }
-        val.push_back(nextVal);
+        out_val.push_back(nextVal);
     }
     return false;
+}
+
+bool TVectorString::tryParse(const std::string& input) {
+    unsigned int i = 0;
+    return tryParseVectorString(input, i, this->val);
 }
 
 std::ostream& operator<<(std::ostream& os, TVectorString& t) {

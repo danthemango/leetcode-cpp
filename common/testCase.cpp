@@ -14,7 +14,7 @@ std::map<std::string,std::string> knownTypes {
     {"uint32_t", "TInt"}, // <- not sure about this one
     {"vector<vector<int>>", "TVVInt"},
     {"vector<ListNode*>", "TVectorListNode"},
-    {"vector<NullableBool>", "TVectorNullableBool"},
+    {"vector<NullableResult>", "TVectorNullableResult"},
     {"vector<vector<string>>", "TVVString"}
 };
 
@@ -295,7 +295,7 @@ std::ostream & operator<<(std::ostream& os, TestCase& t) {
     for(const auto& pair : t.input) {
         os << "<- " << pair.first << ": " << pair.second << endl;
     }
-    os << "-> " << t.expected << endl;
+    os << "->      " << t.expected << endl;
     return os;
 }
 
