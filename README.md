@@ -26,9 +26,9 @@ String
 - [x] valid-anagram
 - [ ] Group Anagrams - https://leetcode.com/problems/group-anagrams/
 - [x] valid-parentheses
-- [x] Valid Palindrome - https://leetcode.com/problems/valid-palindrome/
+- [x] Valid Palindrome 
 - [ ] Longest Palindromic Substring - https://leetcode.com/problems/longest-palindromic-substring/
-- [ ] Palindromic Substrings - https://leetcode.com/problems/palindromic-substrings/
+- [x] Palindromic Substrings
 - [ ] Encode and Decode Strings (Leetcode Premium) - https://leetcode.com/problems/encode-and-decode-strings/
 
 Tree
