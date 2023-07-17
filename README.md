@@ -15,7 +15,7 @@ Linked List
 
 Matrix
 - [x] set-matrix-zeroes
-- [ ] Spiral Matrix - https://leetcode.com/problems/spiral-matrix/
+- [x] spiral-matrix
 - [x] rotate-image
 - [x] word-search
 
