@@ -39,7 +39,7 @@ Tree
 - [x] binary-tree-level-order-traversal
 - [x] serialize-and-deserialize-binary-tree
 - [x] subtree-of-another-tree
-- [ ] Construct Binary Tree from Preorder and Inorder Traversal - https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+- [x] construct-binary-tree-from-preorder-and-inorder-traversal
 - [x] validate-binary-search-tree
 - [x] kth-smallest-element-in-a-bst
 - [x] Lowest Common Ancestor of BST
