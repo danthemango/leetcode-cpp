@@ -7,7 +7,7 @@ TODO
 ====
 Linked List
 - [x] reverse-linked-list
-- [ ] Detect Cycle in a Linked List - https://leetcode.com/problems/linked-list-cycle/
+- [x] linked-list-cycle
 - [x] merge-two-sorted-lists
 - [x] merge-k-sorted-lists
 - [x] remove-nth-node-from-end-of-list
@@ -24,12 +24,12 @@ String
 - [ ] Longest Repeating Character Replacement - https://leetcode.com/problems/longest-repeating-character-replacement/
 - [ ] Minimum Window Substring - https://leetcode.com/problems/minimum-window-substring/
 - [x] valid-anagram
-- [ ] Group Anagrams - https://leetcode.com/problems/group-anagrams/
+- [x] group-anagrams
 - [x] valid-parentheses
 - [x] Valid Palindrome 
 - [ ] Longest Palindromic Substring - https://leetcode.com/problems/longest-palindromic-substring/
 - [x] Palindromic Substrings
-- [ ] Encode and Decode Strings (Leetcode Premium) - https://leetcode.com/problems/encode-and-decode-strings/
+- [ ] encode-and-decode-strings (premium)
 
 Tree
 - [x] maximum-depth-of-binary-tree
@@ -48,7 +48,7 @@ Tree
 - [ ] Word Search II - https://leetcode.com/problems/word-search-ii/
 
 Heap
-- [ ] Top K Frequent Elements - https://leetcode.com/problems/top-k-frequent-elements/
+- [x] top-k-frequent-elements
 - [ ] Find Median from Data Stream - https://leetcode.com/problems/find-median-from-data-stream/
 
 Other
@@ -59,7 +59,7 @@ Other
 - [x] Evaluate Reverse Polish Notation
 - [ ] Find Pivot Index
 - [x] Fizz Buzz
-- [ ] Implement Queue using Stacks
+- [x] Implement Queue using Stacks
 - [x] Leaf-Similar Trees
 - [ ] Longest Common Subsequence
 - [ ] Maximum Difference Between Node and Ancestor
