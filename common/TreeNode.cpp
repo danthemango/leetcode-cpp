@@ -18,17 +18,16 @@ std::string node2string(TreeNode* node) {
     }
 }
 
+bool isSame(TreeNode* a, TreeNode* b) {
+    if(!a || !b) {
+        return a == b;
+    } else {
+        return a->val == b->val && isSame(a->left, b->left) && isSame(a->right, b->right);
+    }
+}
+
 bool TreeNode::operator==(TreeNode& other) const {
-    if(this->val != other.val) {
-        return false;
-    }
-    if(this->left == nullptr || other.left == nullptr) {
-        return this->left == other.left;
-    }
-    if(this->right == nullptr || other.right == nullptr) {
-        return this->right == other.right;
-    }
-    return *this->left == *other.left && *this->right == *other.right;
+    return isSame((TreeNode*) this, &other);
 }
 
 void TreeNode::deleteTree(TreeNode* root) {
@@ -42,28 +41,44 @@ void TreeNode::deleteTree(TreeNode* root) {
     deleteTree(right);
 }
 
-std::string tree2string(TreeNode* root) {
-    std::queue<TreeNode*> valQueue;
-    if(root != nullptr) {
-        valQueue.push(root);
+unsigned int CountNodes(TreeNode* root) {
+    if(root == nullptr) {
+        return 0;
+    } else {
+        return 1 + CountNodes(root->left) + CountNodes(root->right);
     }
+}
+
+std::vector<std::string> tree2vector(TreeNode* root) {
+    std::vector<std::string> result;
+    std::queue<TreeNode*> nodeQueue;
+    if(root != nullptr) {
+        nodeQueue.push(root);
+    }
+    while(!nodeQueue.empty()) {
+        TreeNode* node = nodeQueue.front();
+        nodeQueue.pop();
+        result.push_back(node2string(node));
+        if(node != nullptr) {
+            nodeQueue.push(node->left);
+            nodeQueue.push(node->right);
+        }
+    }
+    return result;
+}
+
+std::string tree2string(TreeNode* root) {
+    std::vector<std::string> nodeStrings = tree2vector(root);
+
     std::string result;
     result.push_back('[');
     bool first = true;
-    while(!valQueue.empty()) {
+    for(std::string& nodeString : nodeStrings) {
         if(!first) {
             result.push_back(',');
         }
         first = false;
-
-        TreeNode* node = valQueue.front();
-        valQueue.pop();
-        std::string stringVal = node2string(node);
-        result.append(stringVal);
-        if(node != nullptr) {
-            valQueue.push(node->left);
-            valQueue.push(node->right);
-        }
+        result.append(nodeString);
     }
     result.push_back(']');
     return result;
@@ -190,9 +205,21 @@ std::ostream& operator<<(std::ostream& os, std::vector<TreeNode*> arr) {
     return os;
 }
 
+TreeNode* TreeNodeVector2Tree(std::vector<TreeNode*>& nodeArr, unsigned int i) {
+    if(i >= nodeArr.size()) {
+        return nullptr;
+    }
+    TreeNode* root = nodeArr[i];
+    if(!root) {
+        return nullptr;
+    }
+    root->left = TreeNodeVector2Tree(nodeArr, i*2+1);
+    root->right = TreeNodeVector2Tree(nodeArr, i*2+2);
+    return root;
+}
+
 bool TreeNode::tryParse(const std::string& input, unsigned int& i, TreeNode*& out_root) {
     int resetI = i;
-    out_root = nullptr;
 
     std::vector<TreeNode*> arr;
     if(!tryParseTreeNodeVector(input, i, arr)) {
@@ -201,42 +228,10 @@ bool TreeNode::tryParse(const std::string& input, unsigned int& i, TreeNode*& ou
     }
 
     if(arr.size() == 0 || arr[0] == nullptr) {
+        out_root = nullptr;
         return true;
     }
 
-    std::queue<TreeNode*> nodeQueue;
-    unsigned int arrI = 0;
-    out_root = arr[arrI];
-    if(out_root != nullptr) {
-        nodeQueue.push(out_root);
-    } else {
-        return true;
-    }
-    TreeNode* cur = nullptr;
-    NodeState nodeState = NodeState::needNew;
-    ++arrI;
-    while(arrI < arr.size()) {
-        TreeNode* newNode = arr[arrI];
-        ++arrI;
-        if(nodeState == NodeState::left) {
-            cur->left = newNode;
-            nodeState = NodeState::right;
-        } else if(nodeState == NodeState::right) {
-            cur->right = newNode;
-            nodeState = NodeState::needNew;
-        } else if(nodeState == NodeState::needNew) {
-            cur = nodeQueue.front();
-            nodeQueue.pop();
-            cur->left = newNode;
-            nodeState = NodeState::right;
-        } else {
-            throw "should never happen";
-        }
-
-        if(newNode != nullptr) {
-            nodeQueue.push(newNode);
-        }
-    }
-
+    out_root = TreeNodeVector2Tree(arr, 0);
     return true;
 }

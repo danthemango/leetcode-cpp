@@ -39,6 +39,7 @@ bool parseSolutionClass(const std::string& input, std::string& out_json) {
             found = true;
         }
     }
+
     if(!found) {
         std::cerr << "Error (solution2json.cpp): could not find solution" << endl;
         return false;
@@ -100,7 +101,7 @@ int main(int argc, char** argv) {
     {
         std::cerr << "could not open infile" << endl;
         std::cerr << infileName << endl;
-        return false;
+        return 1;
     }
     std::string fileContents = file2String(infile);
     std::string jsonString;
@@ -114,7 +115,7 @@ int main(int argc, char** argv) {
     if (!outfile.is_open())
     {
         std::cerr << "could not open outfile" << endl;
-        return false;
+        return 1;
     }
 
     outfile << jsonString;

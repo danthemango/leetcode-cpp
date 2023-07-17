@@ -2,6 +2,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <cassert>
 #include <iostream>
 #include <string>
 #include <sstream>
