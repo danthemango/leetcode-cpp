@@ -27,7 +27,7 @@ String
 - [x] group-anagrams
 - [x] valid-parentheses
 - [x] Valid Palindrome 
-- [ ] Longest Palindromic Substring - https://leetcode.com/problems/longest-palindromic-substring/
+- [x] longest-palindromic-substring
 - [x] Palindromic Substrings
 - [ ] encode-and-decode-strings (premium)
 
