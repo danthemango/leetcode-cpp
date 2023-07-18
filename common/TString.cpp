@@ -4,9 +4,7 @@
 /* testtype string type handler */
 TString::TString() { }
 
-TString::TString(bool _val) {
-    val = _val;
-}
+TString::TString(std::string _val) : val(_val) { }
 
 std::string& TString::get() {
     return val;

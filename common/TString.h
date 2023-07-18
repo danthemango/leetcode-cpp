@@ -10,7 +10,7 @@ class TString {
 
     TString();
 
-    TString(bool _val);
+    TString(std::string _val);
 
     std::string& get();
 
