@@ -1,10 +1,42 @@
 # leetcode-cpp
-Leetcode problems solved with C++
+Some Leetcode problems solved with C++
 
 Currently working on the blind 75
 
+Usage
+-----
+To run one or more problem statements, first setup Make and gcc, then run:
+- `make common`
+- `make tools`
+- then each directory under 'problems' has one leetcode question which can be ran and compiled
+- `cd problems`
+- `make makefiles`
+- `cd <problem-name>` for any subdirectory
+- then cd into any of the problem directories and run `make` to build and execute the runner program
+
+How this works:
+
+- Solution.h -> SolutionFunc.json
+    - Using the program under tools/solution2json, we parse a 'Solution.h' file for the solution class,
+    the pertinent function is assumed to be the last public function inside of the class,
+    and the program builds a 'SolutionFunc.json' file which includes information of the argument names,
+    argument types, and return type expected from that function.
+- SolutionFunc.json -> runner.cpp
+    - The program under tools/json2runner accepts the 'SolutionFunc.json', and builds a 'runner.cpp' which
+runs the solution function using those expected argument and return types.
+- runner.cpp + readme.md -> test case result
+    - runner.cpp accepts test case specifications from readme.md, and transforms them into C++
+    objects to be passed to the solution function, and an output value which result is a 'success' or a 'fail' result if this expected output value matches the actual output value
+- wrapper classes
+    - every type which is passed to/from a solution function must have a wrapper class, such as:
+        - string -> TString
+        - TreeNode* -> TTreeNode
+        - vector<int> -> TVectorInt
+        - and so on ... 
+    - each of them requires a "get", "operator==", "tryParse", and "operator<<" function to be implemented.
+
 TODO
-====
+----
 Linked List
 - [x] reverse-linked-list
 - [x] linked-list-cycle
