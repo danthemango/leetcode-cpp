@@ -205,16 +205,38 @@ std::ostream& operator<<(std::ostream& os, std::vector<TreeNode*> arr) {
     return os;
 }
 
-TreeNode* TreeNodeVector2Tree(std::vector<TreeNode*>& nodeArr, unsigned int i) {
-    if(i >= nodeArr.size()) {
-        return nullptr;
+enum State { needNew, rightNode };
+
+TreeNode* TreeNodeVector2Tree(std::vector<TreeNode*>& nodeArr) {
+    std::queue<TreeNode*> nodeQueue;
+    TreeNode* root = nullptr;
+    if(nodeArr.size() > 0) {
+        root = nodeArr[0];
+        nodeQueue.push(root);
     }
-    TreeNode* root = nodeArr[i];
-    if(!root) {
-        return nullptr;
+    TreeNode* curr;
+    State state = needNew;
+
+    unsigned int i = 1;
+    while(i < nodeArr.size()) {
+        TreeNode* node = nodeArr[i];
+        ++i;
+        if(state == needNew) {
+            curr = nodeQueue.front();
+            nodeQueue.pop();
+            curr->left = node;
+            state = rightNode;
+        } else if(state == rightNode) {
+            curr->right = node;
+            state = needNew;
+        } else {
+            throw "";
+        }
+        if(node != nullptr) {
+            nodeQueue.push(node);
+        }
     }
-    root->left = TreeNodeVector2Tree(nodeArr, i*2+1);
-    root->right = TreeNodeVector2Tree(nodeArr, i*2+2);
+
     return root;
 }
 
@@ -232,6 +254,6 @@ bool TreeNode::tryParse(const std::string& input, unsigned int& i, TreeNode*& ou
         return true;
     }
 
-    out_root = TreeNodeVector2Tree(arr, 0);
+    out_root = TreeNodeVector2Tree(arr);
     return true;
 }

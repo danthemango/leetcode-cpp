@@ -3,7 +3,7 @@
 #define COMMON_H
 
 // for debugging one variable
-#define DBVAR(x) std::cout << #x << " = " << x << std::endl;
+#define DBVAR(x) std::cout << (#x) << " = " << (x) << std::endl;
 
 #include <cassert>
 #include <iostream>
