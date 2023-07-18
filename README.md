@@ -1,42 +1,62 @@
 # leetcode-cpp
-Some Leetcode problems solved with C++
 
-Currently working on the blind 75
+Some Leetcode problems solved with C++, with an
+automatically generated Solution class testcase parser and runner.
 
-Usage
------
-To run one or more problem statements, first setup Make and gcc, then run:
+Problem Runner
+--------------
+To run the testcases for a problem, first install Make and g++, then run:
 - `make common`
 - `make tools`
-- then each directory under 'problems' has one leetcode question which can be ran and compiled
 - `cd problems`
 - `make makefiles`
-- `cd <problem-name>` for any subdirectory
+- `cd <problem-name>` to enter the specific problem directory
 - then cd into any of the problem directories and run `make` to build and execute the runner program
 
-How this works:
-
-- Solution.h -> SolutionFunc.json
-    - Using the program under tools/solution2json, we parse a 'Solution.h' file for the solution class,
-    the pertinent function is assumed to be the last public function inside of the class,
-    and the program builds a 'SolutionFunc.json' file which includes information of the argument names,
-    argument types, and return type expected from that function.
-- SolutionFunc.json -> runner.cpp
-    - The program under tools/json2runner accepts the 'SolutionFunc.json', and builds a 'runner.cpp' which
-runs the solution function using those expected argument and return types.
-- runner.cpp + readme.md -> test case result
-    - runner.cpp accepts test case specifications from readme.md, and transforms them into C++
-    objects to be passed to the solution function, and an output value which result is a 'success' or a 'fail' result if this expected output value matches the actual output value
+How this works (solution runner generator)
+------------------------------------------
+- after completing the 'readme.md' and 'Solution.h' files inside of a problem directory, the `make` command does the following:
+    - Solution.h -> SolutionFunc.json
+        - Using the program under tools/solution2json, we parse a 'Solution.h' file for the solution class,
+        the solution function is assumed to be the last public function inside of the class.
+        The program then builds a 'SolutionFunc.json' file which includes information of the argument names,
+        argument types, and return type expected from that function.
+    - SolutionFunc.json -> runner.cpp
+        - The program under tools/json2runner accepts the 'SolutionFunc.json', and builds a 'runner.cpp' which will run the solution function.
+    - runner.cpp + readme.md -> test case result
+        - runner.cpp reads readme.md, and runs the solution function using the specified test case specifications.
+        - the readme.md file must have three lines that begin with the following text, in-order, for each of the following in-order for each test case:
+            - "Example N:" where N is an integer for the test case number
+            - "Input: arg1 = val1, arg2 = val2, ..." which specifies the solution function argument names and values for this test case
+            - "Output: val" which is the expected solution function return value for this test case
+        - the input and output values are then transformed using a wrapper class, which parses the test case values into argument and return types that the solution function will accept, which are printed to the screen printed, then checked for success or failure
+        - for example "Input: list = [1,2,3]" can be transformed into a `vector<int>`, `ListNode*`, `TreeNode*`, or other value types as needed
 - wrapper classes
-    - every type which is passed to/from a solution function must have a wrapper class, such as:
+    - every type which is passed to/from a solution function must have a wrapper class implemented under 'common/', such as:
         - string -> TString
         - TreeNode* -> TTreeNode
         - vector<int> -> TVectorInt
         - and so on ... 
-    - each of them requires a "get", "operator==", "tryParse", and "operator<<" function to be implemented.
+    - each of them requires a "get", "operator==", "tryParse", and "operator<<" function to be implemented to parse, check, and print the values
+    - The list of known types and wrapper classes are specified inside of 'common/testCase.cpp'
 
-TODO
-----
+Adding New Leetcode Problem
+---------------------------
+To create a functional problem directory called 'longest-common-subsequence' for example:
+- run `cd problems`
+- run `bash createNew.sh longest-common-subsequence` which will print out the following:
+```
+mkdir longest-common-subsequence
+creating new files:
+C:\Users\dan\Dropbox\practice\leetcode-cpp\problems\longest-common-subsequence\Solution.h
+C:\Users\dan\Dropbox\practice\leetcode-cpp\problems\longest-common-subsequence\readme.md
+```
+- then write the solution class in 'Solution.h' and the testcases in 'readme.md'
+- test the solution by running `make`
+
+
+My Problem List
+---------------
 Linked List
 - [x] reverse-linked-list
 - [x] linked-list-cycle
@@ -93,8 +113,8 @@ Other
 - [x] Fizz Buzz
 - [x] Implement Queue using Stacks
 - [x] Leaf-Similar Trees
-- [ ] Longest Common Subsequence
-- [ ] Maximum Difference Between Node and Ancestor
+- [x] longest-common-subsequence
+- [x] maximum-difference-between-node-and-ancestor
 - [ ] Maximum Product Subarray - https://leetcode.com/problems/maximum-subarray/
 - [ ] Maximum Product of Splitted Binary Tree
 - [ ] Merge Intervals
