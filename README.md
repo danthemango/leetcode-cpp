@@ -72,3 +72,4 @@ Other
 - [ ] Meeting Rooms II (Leetcode Premium) - https://leetcode.com/problems/meeting-rooms-ii/
 - [x] find-mode-in-binary-search-tree
 - [x] add-two-numbers-ii
+- [x] longest-consecutive-sequence
